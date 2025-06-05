@@ -1,20 +1,1150 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My app</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta charset="utf-8">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recore Employee Onboarding</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="flex justify-center items-center h-screen overflow-hidden bg-white font-sans text-center px-6">
-    <div class="w-full">
-      <span class="text-xs rounded-full mb-2 inline-block px-2 py-1 border border-amber-500/15 bg-amber-500/15 text-amber-500">🔥 New version dropped!</span>
-      <h1 class="text-4xl lg:text-6xl font-bold font-sans">
-        <span class="text-2xl lg:text-4xl text-gray-400 block font-medium">I'm ready to work,</span>
-        Ask me anything.
-      </h1>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for file upload and camera button */
+        .file-upload {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .camera-button, .gallery-button {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .camera-button:hover, .gallery-button:hover {
+            transform: scale(1.05);
+        }
+        
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.5);
+        }
+        
+        /* For hiding/showing spouse fields based on marital status */
+        #spouseFields {
+            display: none;
+            transition: all 0.3s ease;
+        }
+        
+        /* Green color matching the logo */
+        .recore-green {
+            background-color: #1a936f;
+        }
+        
+        .text-recore-green {
+            color: #1a936f;
+        }
+        
+        .border-recore-green {
+            border-color: #1a936f;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
+        <div class="flex items-center">
+            <img src="https://recoreltdng.com/img/logo.png" alt="Recore Logo" class="h-12">
+        </div>
+        <h1 class="text-xl md:text-2xl font-bold text-gray-800">Employee Onboarding Portal</h1>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="container mx-auto px-4 py-4">
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div id="progressBar" class="recore-green h-2.5 rounded-full" style="width: 33%"></div>
+        </div>
+        <div class="flex justify-between mt-2 text-sm text-gray-600">
+            <span class="font-medium text-recore-green">Applicant Data</span>
+            <span>Pension & Bank</span>
+            <span>ID Card Request</span>
+        </div>
     </div>
-      <img src="https://enzostvs-deepsite.hf.space/arrow.svg" class="absolute bottom-8 left-0 w-[100px] transform rotate-[30deg]" />
-    <script></script>
-  </body>
+
+    <!-- Main Form Container -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Form 1 - Applicant Data -->
+        <form id="applicantDataForm" class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-bold text-recore-green mb-6">Applicant Data Form</h2>
+            
+            <!-- Personal Information Section -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Personal Information</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Name -->
+                    <div>
+                        <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
+                        <input type="text" id="fullName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" placeholder="Enter surname first then other names" required>
+                    </div>
+                    
+                    <!-- Date of Birth -->
+                    <div>
+                        <label for="dob" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth*</label>
+                        <input type="date" id="dob" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- State of Origin -->
+                    <div>
+                        <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State of Origin*</label>
+                        <select id="state" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                            <option value="">-- Select State --</option>
+                            <option value="Abia">Abia</option>
+                            <option value="Adamawa">Adamawa</option>
+                            <option value="Akwa Ibom">Akwa Ibom</option>
+                            <option value="Anambra">Anambra</option>
+                            <option value="Bauchi">Bauchi</option>
+                            <option value="Bayelsa">Bayelsa</option>
+                            <option value="Benue">Benue</option>
+                            <option value="Borno">Borno</option>
+                            <option value="Cross River">Cross River</option>
+                            <option value="Delta">Delta</option>
+                            <option value="Ebonyi">Ebonyi</option>
+                            <option value="Edo">Edo</option>
+                            <option value="Ekiti">Ekiti</option>
+                            <option value="Enugu">Enugu</option>
+                            <option value="FCT">Federal Capital Territory</option>
+                            <option value="Gombe">Gombe</option>
+                            <option value="Imo">Imo</option>
+                            <option value="Jigawa">Jigawa</option>
+                            <option value="Kaduna">Kaduna</option>
+                            <option value="Kano">Kano</option>
+                            <option value="Katsina">Katsina</option>
+                            <option value="Kebbi">Kebbi</option>
+                            <option value="Kogi">Kogi</option>
+                            <option value="Kwara">Kwara</option>
+                            <option value="Lagos">Lagos</option>
+                            <option value="Nasarawa">Nasarawa</option>
+                            <option value="Niger">Niger</option>
+                            <option value="Ogun">Ogun</option>
+                            <option value="Ondo">Ondo</option>
+                            <option value="Osun">Osun</option>
+                            <option value="Oyo">Oyo</option>
+                            <option value="Plateau">Plateau</option>
+                            <option value="Rivers">Rivers</option>
+                            <option value="Sokoto">Sokoto</option>
+                            <option value="Taraba">Taraba</option>
+                            <option value="Yobe">Yobe</option>
+                            <option value="Zamfara">Zamfara</option>
+                        </select>
+                    </div>
+                    
+                    <!-- LGA -->
+                    <div>
+                        <label for="lga" class="block text-sm font-medium text-gray-700 mb-1">Local Government Area*</label>
+                        <input type="text" id="lga" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email*</label>
+                        <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Phone Number -->
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number*</label>
+                        <input type="tel" id="phone" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Marital Status -->
+                    <div>
+                        <label for="maritalStatus" class="block text-sm font-medium text-gray-700 mb-1">Marital Status*</label>
+                        <select id="maritalStatus" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                            <option value="">-- Select Status --</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Spouse Fields (Hidden by default) -->
+                <div id="spouseFields" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="spouseName" class="block text-sm font-medium text-gray-700 mb-1">Spouse Name</label>
+                        <input type="text" id="spouseName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green">
+                    </div>
+                    
+                    <div>
+                        <label for="spousePhone" class="block text-sm font-medium text-gray-700 mb-1">Spouse Phone Number</label>
+                        <input type="tel" id="spousePhone" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Work Experience Section -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Work Experience</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Years of Experience -->
+                    <div>
+                        <label for="experienceYears" class="block text-sm font-medium text-gray-700 mb-1">Years of Working Experience*</label>
+                        <input type="number" id="experienceYears" min="0" max="50" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Last Place of Employment -->
+                    <div>
+                        <label for="lastEmployer" class="block text-sm font-medium text-gray-700 mb-1">Last Place of Employment*</label>
+                        <input type="text" id="lastEmployer" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Contact Person -->
+                    <div>
+                        <label for="contactPerson" class="block text-sm font-medium text-gray-700 mb-1">Contact Person at Last Employer*</label>
+                        <input type="text" id="contactPerson" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" placeholder="Name and phone number" required>
+                    </div>
+                    
+                    <!-- Last Salary -->
+                    <div>
+                        <label for="lastSalary" class="block text-sm font-medium text-gray-700 mb-1">Last Salary Received (₦)*</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <span class="text-gray-500">₦</span>
+                            </div>
+                            <input type="number" id="lastSalary" min="0" step="1000" class="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Reason for Leaving -->
+                    <div class="md:col-span-2">
+                        <label for="reasonLeaving" class="block text-sm font-medium text-gray-700 mb-1">Reason for Leaving Last Employer*</label>
+                        <textarea id="reasonLeaving" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Next of Kin Section -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Next of Kin Information</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Next of Kin Name -->
+                    <div>
+                        <label for="kinName" class="block text-sm font-medium text-gray-700 mb-1">Next of Kin Name*</label>
+                        <input type="text" id="kinName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Next of Kin Phone -->
+                    <div>
+                        <label for="kinPhone" class="block text-sm font-medium text-gray-700 mb-1">Next of Kin Phone Number*</label>
+                        <input type="tel" id="kinPhone" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Next of Kin Address -->
+                    <div class="md:col-span-2">
+                        <label for="kinAddress" class="block text-sm font-medium text-gray-700 mb-1">Next of Kin Address*</label>
+                        <textarea id="kinAddress" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Information -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Additional Information</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Educational Qualification -->
+                    <div class="md:col-span-2">
+                        <label for="education" class="block text-sm font-medium text-gray-700 mb-1">Educational Qualification*</label>
+                        <textarea id="education" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required></textarea>
+                    </div>
+                    
+                    <!-- Position Applied For -->
+                    <div>
+                        <label for="position" class="block text-sm font-medium text-gray-700 mb-1">Position Applied For*</label>
+                        <input type="text" id="position" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Residential Address -->
+                    <div class="md:col-span-2">
+                        <label for="residentialAddress" class="block text-sm font-medium text-gray-700 mb-1">Residential Address*</label>
+                        <textarea id="residentialAddress" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Navigation -->
+            <div class="flex justify-between mt-8">
+                <button type="button" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-recore-green">Reset</button>
+                <button type="button" id="nextToPension" class="px-6 py-2 recore-green text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-recore-green">
+                    Save & Next <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </form>
+
+        <!-- Form 2 - Pension and Bank Details (Hidden Initially) -->
+        <form id="pensionBankForm" class="bg-white rounded-lg shadow-md p-6 mb-8 hidden">
+            <h2 class="text-2xl font-bold text-recore-green mb-6">Pension & Bank Details Form</h2>
+            
+            <!-- Pension Details -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Pension Details</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Pension Name -->
+                    <div>
+                        <label for="pensionName" class="block text-sm font-medium text-gray-700 mb-1">Name*</label>
+                        <input type="text" id="pensionName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" placeholder="Enter surname first then other names" required>
+                    </div>
+                    
+                    <!-- Pension Number -->
+                    <div>
+                        <label for="pensionNumber" class="block text-sm font-medium text-gray-700 mb-1">Pension Number (PIN)</label>
+                        <input type="text" id="pensionNumber" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green">
+                        <p class="text-xs text-gray-500 mt-1">(Optional if you don't have a pension number)</p>
+                    </div>
+                    
+                    <!-- Pension Fund Administrator -->
+                    <div class="md:col-span-2">
+                        <label for="pensionAdmin" class="block text-sm font-medium text-gray-700 mb-1">Pension Fund Administrator</label>
+                        <input type="text" id="pensionAdmin" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green">
+                        <p class="text-xs text-gray-500 mt-1">(Optional if you don't have a pension administrator)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bank Details -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Bank Details</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Bank Name -->
+                    <div>
+                        <label for="bankName" class="block text-sm font-medium text-gray-700 mb-1">Name*</label>
+                        <input type="text" id="bankName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" placeholder="Enter surname first then other names" required>
+                    </div>
+                    
+                    <!-- Account Number -->
+                    <div>
+                        <label for="accountNumber" class="block text-sm font-medium text-gray-700 mb-1">Account Number*</label>
+                        <input type="text" id="accountNumber" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Bank Name -->
+                    <div>
+                        <label for="bankNameSelect" class="block text-sm font-medium text-gray-700 mb-1">Bank Name*</label>
+                        <select id="bankNameSelect" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                            <option value="">-- Select Bank --</option>
+                            <option value="Access Bank">Access Bank</option>
+                            <option value="Citibank">Citibank</option>
+                            <option value="Ecobank">Ecobank</option>
+                            <option value="Fidelity Bank">Fidelity Bank</option>
+                            <option value="First Bank">First Bank</option>
+                            <option value="GTBank">GTBank</option>
+                            <option value="Heritage Bank">Heritage Bank</option>
+                            <option value="Keystone Bank">Keystone Bank</option>
+                            <option value="Polaris Bank">Polaris Bank</option>
+                            <option value="Stanbic IBTC">Stanbic IBTC</option>
+                            <option value="Standard Chartered">Standard Chartered</option>
+                            <option value="Sterling Bank">Sterling Bank</option>
+                            <option value="Union Bank">Union Bank</option>
+                            <option value="UBA">UBA</option>
+                            <option value="Unity Bank">Unity Bank</option>
+                            <option value="Wema Bank">Wema Bank</option>
+                            <option value="Zenith Bank">Zenith Bank</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Navigation -->
+            <div class="flex justify-between mt-8">
+                <button type="button" id="backToApplicant" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-recore-green">
+                    <i class="fas fa-arrow-left mr-2"></i> Back
+                </button>
+                <button type="button" id="nextToIdCard" class="px-6 py-2 recore-green text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-recore-green">
+                    Save & Next <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </form>
+
+        <!-- Form 3 - ID Card Request (Hidden Initially) -->
+        <form id="idCardForm" class="bg-white rounded-lg shadow-md p-6 mb-8 hidden">
+            <h2 class="text-2xl font-bold text-recore-green mb-6">ID Card Request Form</h2>
+            
+            <!-- ID Card Details -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">ID Card Information</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Name -->
+                    <div>
+                        <label for="idCardName" class="block text-sm font-medium text-gray-700 mb-1">Name*</label>
+                        <input type="text" id="idCardName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" placeholder="Enter surname first then other names" required>
+                    </div>
+                    
+                    <!-- Staff ID -->
+                    <div>
+                        <label for="staffId" class="block text-sm font-medium text-gray-700 mb-1">Staff ID No</label>
+                        <input type="text" id="staffId" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green">
+                        <p class="text-xs text-gray-500 mt-1">(Optional if you don't have a staff ID)</p>
+                    </div>
+                    
+                    <!-- Company Name -->
+                    <div>
+                        <label for="companyName" class="block text-sm font-medium text-gray-700 mb-1">Name of Company (Not Recore)*</label>
+                        <input type="text" id="companyName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Date -->
+                    <div>
+                        <label for="requestDate" class="block text-sm font-medium text-gray-700 mb-1">Date*</label>
+                        <input type="date" id="requestDate" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Signature -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Signature</h3>
+                
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- Signature Name -->
+                    <div>
+                        <label for="signatureName" class="block text-sm font-medium text-gray-700 mb-1">Signature Name*</label>
+                        <input type="text" id="signatureName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-recore-green focus:border-recore-green" required>
+                    </div>
+                    
+                    <!-- Signature Canvas -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Draw Your Signature*</label>
+                        <div class="border-2 border-gray-300 rounded-md p-4">
+                            <canvas id="signatureCanvas" class="w-full h-32 border border-gray-300 bg-white"></canvas>
+                            <div class="flex justify-between mt-2">
+                                <button type="button" id="clearSignature" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm">
+                                    Clear
+                                </button>
+                                <p class="text-xs text-gray-500">Click and drag to sign above</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Document Upload Section -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Required Documents</h3>
+                <p class="text-sm text-gray-600 mb-4">Please upload clear scans of the following documents:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Passport Photo -->
+                    <div class="border border-gray-200 rounded-md p-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Passport Photograph</label>
+                        <div class="file-upload relative mb-2">
+                            <div class="camera-button px-4 py-2 bg-recore-green text-white text-center rounded-md">
+                                <i class="fas fa-camera mr-2"></i> Take Photo
+                            </div>
+                            <input type="file" id="passportPhoto" accept="image/*" capture="camera" class="document-upload" data-doc-type="passport">
+                        </div>
+                        <div class="file-upload relative">
+                            <div class="gallery-button px-4 py-2 bg-gray-200 text-gray-700 text-center rounded-md">
+                                <i class="fas fa-images mr-2"></i> Choose from Gallery
+                            </div>
+                            <input type="file" id="passportGallery" accept="image/*" class="document-upload" data-doc-type="passport">
+                        </div>
+                        <div id="passportPreview" class="mt-2 hidden">
+                            <img id="passportPreviewImg" src="#" alt="Passport preview" class="w-20 h-20 object-cover rounded-md border">
+                            <p class="text-xs text-green-600 mt-1">Passport uploaded</p>
+                        </div>
+                    </div>
+                    
+                    <!-- WAEC Result -->
+                    <div class="border border-gray-200 rounded-md p-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">WAEC Result</label>
+                        <div class="file-upload relative mb-2">
+                            <div class="camera-button px-4 py-2 bg-recore-green text-white text-center rounded-md">
+                                <i class="fas fa-camera mr-2"></i> Take Photo
+                            </div>
+                            <input type="file" id="waecResult" accept="image/*" capture="camera" class="document-upload" data-doc-type="waec">
+                        </div>
+                        <div class="file-upload relative">
+                            <div class="gallery-button px-4 py-2 bg-gray-200 text-gray-700 text-center rounded-md">
+                                <i class="fas fa-images mr-2"></i> Choose from Gallery
+                            </div>
+                            <input type="file" id="waecGallery" accept="image/*" class="document-upload" data-doc-type="waec">
+                        </div>
+                        <div id="waecPreview" class="mt-2 hidden">
+                            <img id="waecPreviewImg" src="#" alt="WAEC preview" class="w-20 h-20 object-cover rounded-md border">
+                            <p class="text-xs text-green-600 mt-1">WAEC uploaded</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Birth Certificate -->
+                    <div class="border border-gray-200 rounded-md p-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Birth Certificate</label>
+                        <div class="file-upload relative mb-2">
+                            <div class="camera-button px-4 py-2 bg-recore-green text-white text-center rounded-md">
+                                <i class="fas fa-camera mr-2"></i> Take Photo
+                            </div>
+                            <input type="file" id="birthCertificate" accept="image/*" capture="camera" class="document-upload" data-doc-type="birth">
+                        </div>
+                        <div class="file-upload relative">
+                            <div class="gallery-button px-4 py-2 bg-gray-200 text-gray-700 text-center rounded-md">
+                                <i class="fas fa-images mr-2"></i> Choose from Gallery
+                            </div>
+                            <input type="file" id="birthGallery" accept="image/*" class="document-upload" data-doc-type="birth">
+                        </div>
+                        <div id="birthPreview" class="mt-2 hidden">
+                            <img id="birthPreviewImg" src="#" alt="Birth certificate preview" class="w-20 h-20 object-cover rounded-md border">
+                            <p class="text-xs text-green-600 mt-1">Certificate uploaded</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Affidavit -->
+                    <div class="border border-gray-200 rounded-md p-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Affidavit of Name Change</label>
+                        <div class="file-upload relative mb-2">
+                            <div class="camera-button px-4 py-2 bg-recore-green text-white text-center rounded-md">
+                                <i class="fas fa-camera mr-2"></i> Take Photo
+                            </div>
+                            <input type="file" id="affidavit" accept="image/*" capture="camera" class="document-upload" data-doc-type="affidavit">
+                        </div>
+                        <div class="file-upload relative">
+                            <div class="gallery-button px-4 py-2 bg-gray-200 text-gray-700 text-center rounded-md">
+                                <i class="fas fa-images mr-2"></i> Choose from Gallery
+                            </div>
+                            <input type="file" id="affidavitGallery" accept="image/*" class="document-upload" data-doc-type="affidavit">
+                        </div>
+                        <div id="affidavitPreview" class="mt-2 hidden">
+                            <img id="affidavitPreviewImg" src="#" alt="Affidavit preview" class="w-20 h-20 object-cover rounded-md border">
+                            <p class="text-xs text-green-600 mt-1">Affidavit uploaded</p>
+                        </div>
+                    </div>
+                    
+                    <!-- University Certificate -->
+                    <div class="border border-gray-200 rounded-md p-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">University Certificate</label>
+                        <div class="file-upload relative mb-2">
+                            <div class="camera-button px-4 py-2 bg-recore-green text-white text-center rounded-md">
+                                <i class="fas fa-camera mr-2"></i> Take Photo
+                            </div>
+                            <input type="file" id="uniCertificate" accept="image/*" capture="camera" class="document-upload" data-doc-type="uni">
+                        </div>
+                        <div class="file-upload relative">
+                            <div class="gallery-button px-4 py-2 bg-gray-200 text-gray-700 text-center rounded-md">
+                                <i class="fas fa-images mr-2"></i> Choose from Gallery
+                            </div>
+                            <input type="file" id="uniGallery" accept="image/*" class="document-upload" data-doc-type="uni">
+                        </div>
+                        <div id="uniPreview" class="mt-2 hidden">
+                            <img id="uniPreviewImg" src="#" alt="University certificate preview" class="w-20 h-20 object-cover rounded-md border">
+                            <p class="text-xs text-green-600 mt-1">Certificate uploaded</p>
+                        </div>
+                    </div>
+                    
+                    <!-- CV -->
+                    <div class="border border-gray-200 rounded-md p-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Curriculum Vitae (CV)</label>
+                        <div class="file-upload relative mb-2">
+                            <div class="camera-button px-4 py-2 bg-recore-green text-white text-center rounded-md">
+                                <i class="fas fa-camera mr-2"></i> Take Photo
+                            </div>
+                            <input type="file" id="cvUpload" accept="image/*,application/pdf" capture="camera" class="document-upload" data-doc-type="cv">
+                        </div>
+                        <div class="file-upload relative">
+                            <div class="gallery-button px-4 py-2 bg-gray-200 text-gray-700 text-center rounded-md">
+                                <i class="fas fa-images mr-2"></i> Choose File
+                            </div>
+                            <input type="file" id="cvGallery" accept="image/*,application/pdf" class="document-upload" data-doc-type="cv">
+                        </div>
+                        <div id="cvPreview" class="mt-2 hidden">
+                            <div class="flex items-center">
+                                <i class="fas fa-file-pdf text-red-500 text-2xl mr-2"></i>
+                                <p class="text-sm">CV uploaded</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- NIN -->
+                    <div class="border border-gray-200 rounded-md p-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">National ID (NIN)</label>
+                        <div class="file-upload relative mb-2">
+                            <div class="camera-button px-4 py-2 bg-recore-green text-white text-center rounded-md">
+                                <i class="fas fa-camera mr-2"></i> Take Photo
+                            </div>
+                            <input type="file" id="ninUpload" accept="image/*" capture="camera" class="document-upload" data-doc-type="nin">
+                        </div>
+                        <div class="file-upload relative">
+                            <div class="gallery-button px-4 py-2 bg-gray-200 text-gray-700 text-center rounded-md">
+                                <i class="fas fa-images mr-2"></i> Choose from Gallery
+                            </div>
+                            <input type="file" id="ninGallery" accept="image/*" class="document-upload" data-doc-type="nin">
+                        </div>
+                        <div id="ninPreview" class="mt-2 hidden">
+                            <img id="ninPreviewImg" src="#" alt="NIN preview" class="w-20 h-20 object-cover rounded-md border">
+                            <p class="text-xs text-green-600 mt-1">NIN uploaded</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Other Documents -->
+                    <div class="border border-gray-200 rounded-md p-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Other Documents</label>
+                        <div class="file-upload relative mb-2">
+                            <div class="camera-button px-4 py-2 bg-recore-green text-white text-center rounded-md">
+                                <i class="fas fa-camera mr-2"></i> Take Photo
+                            </div>
+                            <input type="file" id="otherDocs" accept="image/*,application/pdf" capture="camera" class="document-upload" data-doc-type="other">
+                        </div>
+                        <div class="file-upload relative">
+                            <div class="gallery-button px-4 py-2 bg-gray-200 text-gray-700 text-center rounded-md">
+                                <i class="fas fa-images mr-2"></i> Choose File
+                            </div>
+                            <input type="file" id="otherGallery" accept="image/*,application/pdf" multiple class="document-upload" data-doc-type="other">
+                        </div>
+                        <div id="otherPreview" class="mt-2 hidden">
+                            <div class="flex items-center">
+                                <i class="fas fa-file text-gray-500 text-2xl mr-2"></i>
+                                <p class="text-sm">Other files uploaded</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Navigation -->
+            <div class="flex justify-between mt-8">
+                <button type="button" id="backToPension" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-recore-green">
+                    <i class="fas fa-arrow-left mr-2"></i> Back
+                </button>
+                <button type="button" id="submitForm" class="px-6 py-2 recore-green text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-recore-green">
+                    <i class="fas fa-paper-plane mr-2"></i> Submit Application
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form navigation variables
+            const applicantDataForm = document.getElementById('applicantDataForm');
+            const pensionBankForm = document.getElementById('pensionBankForm');
+            const idCardForm = document.getElementById('idCardForm');
+            const progressBar = document.getElementById('progressBar');
+            
+            // Navigation buttons
+            const nextToPensionBtn = document.getElementById('nextToPension');
+            const backToApplicantBtn = document.getElementById('backToApplicant');
+            const nextToIdCardBtn = document.getElementById('nextToIdCard');
+            const backToPensionBtn = document.getElementById('backToPension');
+            const submitFormBtn = document.getElementById('submitForm');
+            
+            // Marital status toggle for spouse fields
+            const maritalStatus = document.getElementById('maritalStatus');
+            const spouseFields = document.getElementById('spouseFields');
+            
+            // Signature canvas
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            const clearSignatureBtn = document.getElementById('clearSignature');
+            let isDrawing = false;
+            
+            // Initialize the signature canvas
+            function initSignatureCanvas() {
+                // Set canvas background to white
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Set drawing style
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                
+                // Event listeners for drawing
+                canvas.addEventListener('mousedown', startDrawing);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', stopDrawing);
+                canvas.addEventListener('mouseout', stopDrawing);
+                
+                // Touch support for mobile devices
+                canvas.addEventListener('touchstart', startDrawing);
+                canvas.addEventListener('touchmove', draw);
+                canvas.addEventListener('touchend', stopDrawing);
+            }
+            
+            function startDrawing(e) {
+                isDrawing = true;
+                draw(e);
+            }
+            
+            function draw(e) {
+                if (!isDrawing) return;
+                
+                // Get position
+                let x, y;
+                if (e.type.includes('touch')) {
+                    const rect = canvas.getBoundingClientRect();
+                    x = e.touches[0].clientX - rect.left;
+                    y = e.touches[0].clientY - rect.top;
+                } else {
+                    x = e.offsetX;
+                    y = e.offsetY;
+                }
+                
+                // Draw line
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+            }
+            
+            function stopDrawing() {
+                isDrawing = false;
+                ctx.beginPath();
+            }
+            
+            // Clear signature
+            clearSignatureBtn.addEventListener('click', function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            });
+            
+            // Toggle spouse fields based on marital status
+            maritalStatus.addEventListener('change', function() {
+                if (this.value === 'Married') {
+                    spouseFields.style.display = 'grid';
+                    document.getElementById('spouseName').setAttribute('required', '');
+                    document.getElementById('spousePhone').setAttribute('required', '');
+                } else {
+                    spouseFields.style.display = 'none';
+                    document.getElementById('spouseName').removeAttribute('required');
+                    document.getElementById('spousePhone').removeAttribute('required');
+                }
+            });
+            
+            // Function to save form data to local storage
+            function saveFormData(formId) {
+                const form = document.getElementById(formId);
+                const inputs = form.querySelectorAll('input, select, textarea');
+                
+                const formData = {};
+                inputs.forEach(input => {
+                    if (input.type === 'file') return; // Skip file inputs
+                    
+                    if (input.type === 'checkbox' || input.type === 'radio') {
+                        formData[input.id] = input.checked;
+                    } else {
+                        formData[input.id] = input.value;
+                    }
+                });
+                
+                // Special handling for signature canvas
+                if (formId === 'idCardForm') {
+                    formData.signatureData = canvas.toDataURL();
+                }
+                
+                localStorage.setItem(formId, JSON.stringify(formData));
+            }
+            
+            // Function to load form data from local storage
+            function loadFormData(formId) {
+                const savedData = localStorage.getItem(formId);
+                if (!savedData) return;
+                
+                const formData = JSON.parse(savedData);
+                const form = document.getElementById(formId);
+                const inputs = form.querySelectorAll('input, select, textarea');
+                
+                inputs.forEach(input => {
+                    if (input.type === 'file') return; // Skip file inputs
+                    
+                    if (input.id in formData) {
+                        if (input.type === 'checkbox' || input.type === 'radio') {
+                            input.checked = formData[input.id];
+                        } else {
+                            input.value = formData[input.id];
+                        }
+                    }
+                });
+                
+                // Special handling for marital status to show/hide spouse fields
+                if (formId === 'applicantDataForm' && formData.maritalStatus === 'Married') {
+                    spouseFields.style.display = 'grid';
+                }
+                
+                // Special handling for signature canvas
+                if (formId === 'idCardForm' && formData.signatureData) {
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    };
+                    img.src = formData.signatureData;
+                }
+            }
+            
+            // Auto-save form data when inputs change
+            function setupAutoSave(formId) {
+                const form = document.getElementById(formId);
+                form.addEventListener('input', function() {
+                    saveFormData(formId);
+                });
+            }
+            
+            // Form navigation functions
+            function showForm(formToShow) {
+                // Hide all forms
+                applicantDataForm.classList.add('hidden');
+                pensionBankForm.classList.add('hidden');
+                idCardForm.classList.add('hidden');
+                
+                // Show the selected form
+                formToShow.classList.remove('hidden');
+                
+                // Update progress bar
+                if (formToShow === applicantDataForm) {
+                    progressBar.style.width = '33%';
+                } else if (formToShow === pensionBankForm) {
+                    progressBar.style.width = '66%';
+                } else if (formToShow === idCardForm) {
+                    progressBar.style.width = '100%';
+                    // Initialize signature canvas when ID form is shown
+                    initSignatureCanvas();
+                }
+            }
+            
+            // Set up form navigation
+            nextToPensionBtn.addEventListener('click', function() {
+                if (applicantDataForm.checkValidity()) {
+                    saveFormData('applicantDataForm');
+                    showForm(pensionBankForm);
+                } else {
+                    applicantDataForm.reportValidity();
+                }
+            });
+            
+            backToApplicantBtn.addEventListener('click', function() {
+                saveFormData('pensionBankForm');
+                showForm(applicantDataForm);
+            });
+            
+            nextToIdCardBtn.addEventListener('click', function() {
+                if (pensionBankForm.checkValidity()) {
+                    saveFormData('pensionBankForm');
+                    showForm(idCardForm);
+                } else {
+                    pensionBankForm.reportValidity();
+                }
+            });
+            
+            backToPensionBtn.addEventListener('click', function() {
+                saveFormData('idCardForm');
+                showForm(pensionBankForm);
+            });
+            
+            // Load saved form data when page loads
+            loadFormData('applicantDataForm');
+            loadFormData('pensionBankForm');
+            loadFormData('idCardForm');
+            
+            // Set up auto-save for all forms
+            setupAutoSave('applicantDataForm');
+            setupAutoSave('pensionBankForm');
+            setupAutoSave('idCardForm');
+            
+            // Handle document uploads
+            document.querySelectorAll('.document-upload').forEach(input => {
+                input.addEventListener('change', function(e) {
+                    const docType = this.getAttribute('data-doc-type');
+                    const previewDiv = document.getElementById(`${docType}Preview`);
+                    const previewImg = document.getElementById(`${docType}PreviewImg`);
+                    
+                    if (this.files && this.files[0]) {
+                        previewDiv.classList.remove('hidden');
+                        
+                        if (this.files[0].type.includes('image')) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                if (previewImg) {
+                                    previewImg.src = e.target.result;
+                                }
+                            };
+                            reader.readAsDataURL(this.files[0]);
+                        }
+                        
+                        // Save the file information (we'll handle upload in submit)
+                        // This is just for UI feedback
+                    }
+                });
+            });
+            
+            // Handle form submission
+            submitFormBtn.addEventListener('click', function() {
+                if (idCardForm.checkValidity()) {
+                    saveFormData('idCardForm');
+                    
+                    // Collect all form data
+                    const allFormData = {
+                        applicantData: JSON.parse(localStorage.getItem('applicantDataForm') || '{}'),
+                        pensionBankData: JSON.parse(localStorage.getItem('pensionBankForm') || '{}'),
+                        idCardData: JSON.parse(localStorage.getItem('idCardForm') || '{}')
+                    };
+                    
+                    // Get uploaded files (this is a simplified version, actual implementation would need more complex handling)
+                    const uploadedFiles = [];
+                    document.querySelectorAll('.document-upload').forEach(input => {
+                        if (input.files && input.files[0]) {
+                            uploadedFiles.push({
+                                type: input.getAttribute('data-doc-type'),
+                                file: input.files[0]
+                            });
+                        }
+                    });
+                    
+                    /* 
+                    Here you would:
+                    1. Upload files to Google Drive (need to implement Google Drive API)
+                    2. Save form data to MySQL database
+                    3. Generate PDF and email it
+                    
+                    The implementation would require backend code (PHP, Node.js, etc.)
+                    
+                    Below are placeholder comments for where you would add those implementations
+                    */
+                    
+                    /********************
+                    *                   *
+                    *  Google Drive API *
+                    *                   *
+                    *********************/
+                    
+                    // 1. Authenticate with Google Drive using service account or OAuth
+                    // 2. Create a folder named with the applicant's name
+                    // 3. Upload each file to the created folder
+                    // 4. Store the file links in your database or return them to the frontend
+                    
+                    /* Example pseudo-code:
+                    try {
+                        // Authenticate with Google Drive
+                        const auth = new google.auth.GoogleAuth({
+                            keyFile: 'path/to/service-account.json',
+                            scopes: ['https://www.googleapis.com/auth/drive']
+                        });
+                        
+                        const drive = google.drive({ version: 'v3', auth });
+                        
+                        // Create folder with applicant's name
+                        const folderName = allFormData.applicantData.fullName || 'Unnamed Applicant';
+                        const folderMetadata = {
+                            name: folderName,
+                            mimeType: 'application/vnd.google-apps.folder'
+                        };
+                        
+                        const folderResponse = await drive.files.create({
+                            resource: folderMetadata,
+                            fields: 'id'
+                        });
+                        
+                        const folderId = folderResponse.data.id;
+                        
+                        // Upload each file
+                        for (const fileData of uploadedFiles) {
+                            const fileMetadata = {
+                                name: fileData.file.name,
+                                parents: [folderId]
+                            };
+                            
+                            const media = {
+                                mimeType: fileData.file.type,
+                                body: fileData.file
+                            };
+                            
+                            await drive.files.create({
+                                resource: fileMetadata,
+                                media: media,
+                                fields: 'id'
+                            });
+                        }
+                        
+                        console.log('Files uploaded to Google Drive');
+                    } catch (error) {
+                        console.error('Error uploading to Google Drive:', error);
+                    }
+                    */
+                    
+                    /*********************
+                    *                    *
+                    *  MySQL Integration *
+                    *                    *
+                    **********************/
+                    
+                    // 1. Connect to MySQL database using credentials
+                    // 2. Create table structure to store all form fields
+                    // 3. Insert the collected form data
+                    
+                    /* Example pseudo-code:
+                    try {
+                        const mysql = require('mysql2/promise');
+                        
+                        // Create connection
+                        const connection = await mysql.createConnection({
+                            host: 'your_mysql_host',
+                            user: 'your_mysql_username',
+                            password: 'your_mysql_password',
+                            database: 'your_database_name'
+                        });
+                        
+                        // Insert applicant data
+                        await connection.execute(
+                            'INSERT INTO applicants (fullName, dob, state, lga, email, phone, maritalStatus, spouseName, spousePhone, experienceYears, lastEmployer, contactPerson, lastSalary, reasonLeaving, kinName, kinPhone, kinAddress, education, position, residentialAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                            [
+                                allFormData.applicantData.fullName,
+                                allFormData.applicantData.dob,
+                                allFormData.applicantData.state,
+                                allFormData.applicantData.lga,
+                                allFormData.applicantData.email,
+                                allFormData.applicantData.phone,
+                                allFormData.applicantData.maritalStatus,
+                                allFormData.applicantData.spouseName || null,
+                                allFormData.applicantData.spousePhone || null,
+                                allFormData.applicantData.experienceYears,
+                                allFormData.applicantData.lastEmployer,
+                                allFormData.applicantData.contactPerson,
+                                allFormData.applicantData.lastSalary,
+                                allFormData.applicantData.reasonLeaving,
+                                allFormData.applicantData.kinName,
+                                allFormData.applicantData.kinPhone,
+                                allFormData.applicantData.kinAddress,
+                                allFormData.applicantData.education,
+                                allFormData.applicantData.position,
+                                allFormData.applicantData.residentialAddress
+                            ]
+                        );
+                        
+                        // Get the inserted applicant ID
+                        const [applicantRows] = await connection.execute('SELECT LAST_INSERT_ID() as id');
+                        const applicantId = applicantRows[0].id;
+                        
+                        // Insert pension data
+                        await connection.execute(
+                            'INSERT INTO pension_details (applicant_id, name, pension_number, pension_admin) VALUES (?, ?, ?, ?)',
+                            [
+                                applicantId,
+                                allFormData.pensionBankData.pensionName,
+                                allFormData.pensionBankData.pensionNumber || null,
+                                allFormData.pensionBankData.pensionAdmin || null
+                            ]
+                        );
+                        
+                        // Insert bank details
+                        await connection.execute(
+                            'INSERT INTO bank_details (applicant_id, name, account_number, bank_name) VALUES (?, ?, ?, ?)',
+                            [
+                                applicantId,
+                                allFormData.pensionBankData.bankName,
+                                allFormData.pensionBankData.accountNumber,
+                                allFormData.pensionBankData.bankNameSelect
+                            ]
+                        );
+                        
+                        // Insert ID card request
+                        await connection.execute(
+                            'INSERT INTO id_card_requests (applicant_id, name, staff_id, company_name, request_date, signature_name, signature_data) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                            [
+                                applicantId,
+                                allFormData.idCardData.idCardName,
+                                allFormData.idCardData.staffId || null,
+                                allFormData.idCardData.companyName,
+                                allFormData.idCardData.requestDate,
+                                allFormData.idCardData.signatureName,
+                                allFormData.idCardData.signatureData || null
+                            ]
+                        );
+                        
+                        console.log('Data saved to MySQL database');
+                        await connection.end();
+                    } catch (error) {
+                        console.error('Error saving to MySQL:', error);
+                    }
+                    */
+                    
+                    /***********************
+                    *                      *
+                    *  PDF Generation      *
+                    *  and Email Sending   *
+                    *                      *
+                    ************************/
+                    
+                    // 1. Use a library like jsPDF or PDFKit to generate PDF
+                    // 2. Configure email service (Nodemailer, SendGrid, etc.)
+                    // 3. Send the PDF along with form data to specified email
+                    
+                    /* Example pseudo-code:
+                    try {
+                        // Generate PDF
+                        const { jsPDF } = require('jspdf');
+                        
+                        const doc = new jsPDF();
+                        doc.text('Applicant Data', 10, 10);
+                        doc.text(`Name: ${allFormData.applicantData.fullName}`, 10, 20);
+                        // Add all other fields similarly...
+                        
+                        // Save PDF to file or get as buffer
+                        const pdfBuffer = doc.output('arraybuffer');
+                        
+                        // Send email
+                        const nodemailer = require('nodemailer');
+                        
+                        const transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: 'your_email@gmail.com',
+                                pass: 'your_email_password'
+                            }
+                        });
+                        
+                        const mailOptions = {
+                            from: 'your_email@gmail.com',
+                            to: 'recipient@example.com', // Replace with actual recipient
+                            subject: 'New Employee Onboarding Submission',
+                            text: 'Please find attached the onboarding details.',
+                            attachments: [
+                                {
+                                    filename: 'onboarding_details.pdf',
+                                    content: Buffer.from(pdfBuffer)
+                                }
+                            ]
+                        };
+                        
+                        await transporter.sendMail(mailOptions);
+                        console.log('Email sent with PDF attachment');
+                    } catch (error) {
+                        console.error('Error generating PDF or sending email:', error);
+                    }
+                    */
+                    
+                    // For now, just show an alert
+                    alert('Form submitted successfully! In a real implementation, this would save to database, upload files to Google Drive, and email PDF.');
+                    
+                    // Optionally clear localStorage after successful submission
+                    localStorage.removeItem('applicantDataForm');
+                    localStorage.removeItem('pensionBankForm');
+                    localStorage.removeItem('idCardForm');
+                    
+                    // Redirect or show success message
+                    window.location.href = 'success.html'; // You would create this page
+                } else {
+                    idCardForm.reportValidity();
+                }
+            });
+        });
+    </script>
+</body>
 </html>
