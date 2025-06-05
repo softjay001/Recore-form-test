@@ -129,8 +129,8 @@
                         <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Personal Information</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="fullname" class="block text-sm font-medium text-gray-700 mb-1">Full Name (Surname First)</label>
-                                <input type="text" id="fullname" name="fullname" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter surname first, followed by other names" required>
+                                <label for="fullname" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="fullname" name="fullname" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter surname first, then first name" required>
                             </div>
                             <div>
                                 <label for="dob" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
@@ -575,68 +575,6 @@
         </div>
     </main>
 
-    <!-- Camera Modal -->
-    <div id="cameraModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Capture Photo</h3>
-                    <div class="w-full bg-black">
-                        <video id="video" width="100%" height="auto" autoplay></video>
-                        <canvas id="canvas" class="hidden"></canvas>
-                    </div>
-                    <div class="mt-4 flex justify-center">
-                        <button id="captureBtn" class="mr-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            <i class="fas fa-camera mr-2"></i> Capture
-                        </button>
-                        <button id="retakeBtn" class="hidden inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                            <i class="fas fa-redo mr-2"></i> Retake
-                        </button>
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="usePhotoBtn" class="hidden w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Use Photo
-                    </button>
-                    <button type="button" id="closeCameraBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Upload Modal -->
-    <div id="uploadModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Upload Options</h3>
-                    <div class="flex flex-col space-y-4">
-                        <button id="cameraOption" class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            <i class="fas fa-camera mr-3"></i> Take Photo with Camera
-                        </button>
-                        <button id="galleryOption" class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            <i class="fas fa-image mr-3"></i> Choose from Gallery
-                        </button>
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="closeUploadBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
         // Form navigation
@@ -710,9 +648,6 @@
             
             // File upload handlers
             setupFileUploads();
-            
-            // Initialize camera modal
-            setupCameraModal();
         });
         
         function showSection(sectionIndex) {
@@ -783,11 +718,24 @@
             // TODO: Add uploaded files to formData
             
             /* 
-            // This is where you would connect to MySQL database
-            // You would need PHP or Node.js backend to handle this
-            // Example using fetch API:
+            // MySQL DATABASE CONNECTION POINT
+            // You'll need to create a backend API (PHP/Node.js) to handle this
+            // Here's a sample MySQL connection code you would use in your backend:
+
+            // const mysql = require('mysql');
+            // const connection = mysql.createConnection({
+            //   host: 'localhost',
+            //   user: 'YOUR_DB_USER',
+            //   password: 'YOUR_DB_PASSWORD',
+            //   database: 'recore_onboarding'
+            // });
             
-            fetch('submit.php', {
+            // connection.connect();
+            
+            // The POST endpoint would then process the form data and insert it
+            // into the appropriate database tables
+            
+            fetch('api/submit_form.php', {
                 method: 'POST',
                 body: formData
             })
@@ -809,10 +757,42 @@
             // Temporarily just showing alert
             alert('Application submitted successfully! (This would actually save to database in production)');
             
-            // TODO: Generate PDF and send email
+            // PDF GENERATION AND EMAIL FUNCTIONALITY
             /*
-            // This would require a server-side solution like Node.js with PDFKit or PHP with TCPDF
-            // Email would be sent using something like PHPMailer or Nodemailer
+            // Server-side code would be needed to:
+            // 1. Generate PDF from form data (using PDFKit/tcpdf)
+            // 2. Send email with attachment (using Nodemailer/PHPMailer)
+            
+            // Sample Node.js implementation:
+            // const PDFDocument = require('pdfkit');
+            // const nodemailer = require('nodemailer');
+            
+            // Generate PDF
+            // const doc = new PDFDocument();
+            // doc.text(`Employee Onboarding: ${formData.fullname}`);
+            // Add all form data to PDF...
+            
+            // Send Email
+            // const transporter = nodemailer.createTransport({
+            //   service: 'gmail',
+            //   auth: {
+            //     user: 'YOUR_GMAIL@gmail.com',
+            //     pass: 'YOUR_GMAIL_PASSWORD'
+            //   }
+            // });
+            // 
+            // const mailOptions = {
+            //   from: 'onboarding@recoreltd.com',
+            //   to: 'hr@recoreltd.com', // Add your recipient email here
+            //   subject: `New Employee Onboarding: ${formData.fullname}`,
+            //   text: 'See attached onboarding form',
+            //   attachments: [{
+            //     filename: 'onboarding_form.pdf',
+            //     content: pdfBuffer
+            //   }]
+            // };
+            // 
+            // transporter.sendMail(mailOptions);
             */
         }
         
@@ -836,7 +816,6 @@
             document.querySelectorAll('.custom-file-input').forEach(input => {
                 input.addEventListener('change', function(e) {
                     const container = this.closest('.upload-container');
-                    const docType = container.getAttribute('data-doc-type');
                     const label = container.querySelector('.file-upload-label');
                     const previewContainer = container.querySelector('.preview-container');
                     const previewImg = container.querySelector('.preview-container img');
@@ -862,166 +841,49 @@
                     }
                 });
             });
-            
-            // Open upload modal when any upload area is clicked
-            document.querySelectorAll('.file-upload-label').forEach(label => {
-                label.addEventListener('click', function(e) {
-                    // Don't trigger if clicking on the preview image
-                    if (e.target.tagName !== 'IMG') {
-                        e.preventDefault();
-                        document.getElementById('uploadModal').classList.remove('hidden');
-                        
-                        // Store which document type is being uploaded
-                        const container = this.closest('.upload-container');
-                        const docType = container.getAttribute('data-doc-type');
-                        document.getElementById('uploadModal').setAttribute('data-current-doc', docType);
-                    }
-                });
-            });
-            
-            // Camera option in modal
-            document.getElementById('cameraOption').addEventListener('click', function() {
-                document.getElementById('uploadModal').classList.add('hidden');
-                document.getElementById('cameraModal').classList.remove('hidden');
-                startCamera();
-            });
-            
-            // Gallery option in modal
-            document.getElementById('galleryOption').addEventListener('click', function() {
-                const docType = document.getElementById('uploadModal').getAttribute('data-current-doc');
-                document.getElementById('uploadModal').classList.add('hidden');
-                document.getElementById(`${docType}Upload`).click();
-            });
-            
-            // Close upload modal
-            document.getElementById('closeUploadBtn').addEventListener('click', function() {
-                document.getElementById('uploadModal').classList.add('hidden');
-            });
-        }
-        
-        function setupCameraModal() {
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const captureBtn = document.getElementById('captureBtn');
-            const retakeBtn = document.getElementById('retakeBtn');
-            const usePhotoBtn = document.getElementById('usePhotoBtn');
-            const closeCameraBtn = document.getElementById('closeCameraBtn');
-            
-            let stream = null;
-            
-            function startCamera() {
-                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    navigator.mediaDevices.getUserMedia({ video: true })
-                        .then(function(cameraStream) {
-                            stream = cameraStream;
-                            video.srcObject = stream;
-                            video.style.display = 'block';
-                            canvas.style.display = 'none';
-                        })
-                        .catch(function(error) {
-                            console.error('Camera error:', error);
-                            alert('Could not access the camera. Please check permissions.');
-                        });
-                } else {
-                    alert('Camera access not supported in this browser.');
-                }
-            }
-            
-            function stopCamera() {
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    stream = null;
-                }
-            }
-            
-            captureBtn.addEventListener('click', function() {
-                // Pause the video
-                video.pause();
-                
-                // Draw video frame to canvas
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                // Show canvas and hide video
-                video.style.display = 'none';
-                canvas.style.display = 'block';
-                
-                // Show retake and use photo buttons
-                captureBtn.classList.add('hidden');
-                retakeBtn.classList.remove('hidden');
-                usePhotoBtn.classList.remove('hidden');
-                
-                // Stop camera
-                stopCamera();
-            });
-            
-            retakeBtn.addEventListener('click', function() {
-                // Show video and hide canvas
-                video.style.display = 'block';
-                canvas.style.display = 'none';
-                
-                // Hide retake and use photo buttons
-                captureBtn.classList.remove('hidden');
-                retakeBtn.classList.add('hidden');
-                usePhotoBtn.classList.add('hidden');
-                
-                // Restart camera
-                startCamera();
-            });
-            
-            usePhotoBtn.addEventListener('click', function() {
-                // Get the document type being uploaded
-                const docType = document.getElementById('uploadModal').getAttribute('data-current-doc');
-                
-                // Convert canvas to blob
-                canvas.toBlob(function(blob) {
-                    // Create a file from the blob
-                    const file = new File([blob], `${docType}-photo.jpg`, { type: 'image/jpeg' });
-                    
-                    // Create a new FileList with the captured photo
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-                    
-                    // Set the input's files to the new FileList
-                    const input = document.getElementById(`${docType}Upload`);
-                    input.files = dataTransfer.files;
-                    
-                    // Trigger change event to update UI
-                    const event = new Event('change');
-                    input.dispatchEvent(event);
-                    
-                    // Close modal
-                    document.getElementById('cameraModal').classList.add('hidden');
-                }, 'image/jpeg', 0.9);
-            });
-            
-            closeCameraBtn.addEventListener('click', function() {
-                stopCamera();
-                document.getElementById('cameraModal').classList.add('hidden');
-            });
         }
         
         /* 
-        // Google Drive upload function
-        // This would require the Google Drive API and server-side implementation
-        // Here's a conceptual example of what the function might look like
+        // GOOGLE DRIVE UPLOAD FUNCTIONALITY
+        // You'll need server-side code for this (PHP/Node.js)
+        // Here's what the server would need:
         
-        function uploadToGoogleDrive(file, folderName) {
-            // You would need to:
-            // 1. Authenticate with Google Drive API
-            // 2. Create a folder with the employee's name
-            // 3. Upload the file to that folder
-            // 4. Return the file ID or URL
-            
-            // Example credentials (you would replace these with actual credentials)
-            const clientId = 'YOUR_GOOGLE_CLIENT_ID';
-            const apiKey = 'YOUR_GOOGLE_API_KEY';
-            const scope = 'https://www.googleapis.com/auth/drive.file';
-            
-            // This would be implemented on your server for security
-            // Client-side JavaScript should not handle credentials directly
-        }
+        // 1. Configure Google Drive API credentials
+        // const { google } = require('googleapis');
+        // const auth = new google.auth.GoogleAuth({
+        //   keyFile: 'credentials.json',
+        //   scopes: ['https://www.googleapis.com/auth/drive']
+        // });
+        
+        // 2. Function to create folder and upload files
+        // async function uploadToDrive(file, folderName) {
+        //   const drive = google.drive({ version: 'v3', auth });
+        //   
+        //   // Create folder
+        //   const folder = await drive.files.create({
+        //     requestBody: {
+        //       name: folderName,
+        //       mimeType: 'application/vnd.google-apps.folder'
+        //     }
+        //   });
+        //   
+        //   // Upload file to folder
+        //   const uploadedFile = await drive.files.create({
+        //     requestBody: {
+        //       name: file.name,
+        //       parents: [folder.data.id]
+        //     },
+        //     media: {
+        //       mimeType: file.type,
+        //       body: fileStream
+        //     }
+        //   });
+        //   
+        //   return uploadedFile;
+        // }
+        
+        // Note: Never expose your API keys or credentials in client-side code
+        // This should all be handled server-side
         */
     </script>
 </body>
