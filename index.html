@@ -3,704 +3,1024 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recore - Employee Onboarding Portal</title>
+    <title>Recore Limited - Employee Onboarding Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
+        /* Custom CSS for elements that can't be easily styled with Tailwind */
         .form-section {
             display: none;
         }
         .form-section.active {
             display: block;
+            animation: fadeIn 0.5s ease;
         }
-        .nav-item {
-            cursor: pointer;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .nav-item.active {
-            color: #0E9F6E;
-            border-bottom: 2px solid #0E9F6E;
-        }
-        input[type="file"]::-webkit-file-upload-button {
-            visibility: hidden;
-        }
-        input[type="file"]::before {
-            content: 'Upload';
-            display: inline-block;
-            background: #0E9F6E;
-            color: white;
-            border-radius: 4px;
-            padding: 0.5rem 1rem;
-            outline: none;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .input-currency {
-            padding-left: 1.5rem;
-        }
-        .currency-symbol {
+        .custom-file-input {
+            opacity: 0;
             position: absolute;
-            left: 0.75rem;
-            top: 0.75rem;
-            color: #6B7280;
+            z-index: -1;
         }
-        .file-upload-container {
-            background-color: #F3F4F6;
-            border: 2px dashed #D1D5DB;
+        .file-upload-label {
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .file-upload-container.dragover {
-            background-color: #E5E7EB;
-            border-color: #0E9F6E;
+        .file-upload-label:hover {
+            background-color: #e6ffec;
+        }
+        .form-control:focus {
+            border-color: #38a169;
+            box-shadow: 0 0 0 0.2rem rgba(56, 161, 105, 0.25);
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Progress bar */
+        .progress-step {
+            position: relative;
+            flex: 1;
+            text-align: center;
+            padding-bottom: 1rem;
+        }
+        .progress-step:not(:last-child):after {
+            content: "";
+            position: absolute;
+            top: 1.5rem;
+            left: 50%;
+            height: 2px;
+            background: #ddd;
+            width: 100%;
+            z-index: 1;
+        }
+        .progress-step.active:not(:last-child):after {
+            background: #38a169;
+        }
+        .progress-step.active .step-number {
+            background: #38a169;
+            color: white;
+        }
+        .step-number {
+            position: relative;
+            z-index: 2;
+            width: 3rem;
+            height: 3rem;
+            line-height: 3rem;
+            border-radius: 50%;
+            background: #dddddd;
+            color: #555;
+            display: inline-block;
+        }
+        
+        /* Signature pad styling */
+        .signature-pad {
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-    <div class="container mx-auto px-4 py-8 max-w-6xl">
-        <!-- Header Section -->
-        <header class="mb-8">
-            <div class="flex flex-col">
-                <div class="flex items-start">
-                    <img src="https://recoreltdng.com/img/logo.png" alt="Recore Logo" class="h-16">
+<body class="bg-gray-50">
+    <!-- Header Section -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center">
+                <div>
+                    <img src="https://recoreltdng.com/img/logo.png" alt="Recore Limited Logo" class="h-16">
+                    <h2 class="text-gray-600 mt-1 text-lg font-medium">Employee Onboarding Portal</h2>
                 </div>
-                <h2 class="text-2xl font-semibold text-gray-700 mt-2">Employee Onboarding Portal</h2>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <!-- Form Navigation -->
-        <div class="mb-8">
-            <ul class="flex flex-wrap border-b border-gray-200">
-                <li class="nav-item active mr-2 font-medium py-2 px-4" data-target="applicant-data">Applicants Data Form</li>
-                <li class="nav-item mr-2 font-medium py-2 px-4" data-target="pension-bank">Pension & Bank Details</li>
-                <li class="nav-item font-medium py-2 px-4" data-target="id-card">ID Card & Documents</li>
-            </ul>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Progress Steps -->
+        <div class="max-w-4xl mx-auto mb-12">
+            <div class="flex justify-between items-center mb-2">
+                <div class="progress-step active">
+                    <div class="step-number">1</div>
+                    <div class="text-sm font-medium mt-2">Applicant Data</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">2</div>
+                    <div class="text-sm font-medium mt-2">Pension & Bank</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">3</div>
+                    <div class="text-sm font-medium mt-2">ID Request</div>
+                </div>
+            </div>
         </div>
 
         <!-- Form Sections -->
-        <form id="employeeOnboardingForm" class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <!-- Applicant Data Form -->
-            <div id="applicant-data" class="form-section active">
-                <h3 class="text-xl font-semibold mb-6 text-green-600 border-b pb-2">Applicants Data Form</h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
+            <!-- Navigation Tabs -->
+            <h1 class="text-2xl font-bold text-gray-800 mb-6" id="form-title">Applicant Data Form</h1>
+            
+            <!-- Section 1: Applicant Data Form -->
+            <div id="section1" class="form-section active">
+                <form id="applicantForm">
                     <!-- Personal Information -->
-                    <div class="col-span-2">
-                        <h4 class="text-lg font-medium mb-4 text-gray-700">Personal Information</h4>
-                    </div>
-                    
-                    <div>
-                        <label for="surname" class="block mb-2 text-sm font-medium text-gray-700">Surname*</label>
-                        <input type="text" id="surname" name="surname" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="othernames" class="block mb-2 text-sm font-medium text-gray-700">Other Names*</label>
-                        <input type="text" id="othernames" name="othernames" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter names as in passport/ID">
-                    </div>
-                    
-                    <div>
-                        <label for="dob" class="block mb-2 text-sm font-medium text-gray-700">Date of Birth*</label>
-                        <input type="date" id="dob" name="dob" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="state" class="block mb-2 text-sm font-medium text-gray-700">State of Origin*</label>
-                        <select id="state" name="state" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option value="">Select State</option>
-                            <option value="Abia">Abia</option>
-                            <option value="Adamawa">Adamawa</option>
-                            <option value="Akwa Ibom">Akwa Ibom</option>
-                            <option value="Anambra">Anambra</option>
-                            <option value="Bauchi">Bauchi</option>
-                            <option value="Bayelsa">Bayelsa</option>
-                            <option value="Benue">Benue</option>
-                            <option value="Borno">Borno</option>
-                            <option value="Cross River">Cross River</option>
-                            <option value="Delta">Delta</option>
-                            <option value="Ebonyi">Ebonyi</option>
-                            <option value="Edo">Edo</option>
-                            <option value="Ekiti">Ekiti</option>
-                            <option value="Enugu">Enugu</option>
-                            <option value="FCT">Federal Capital Territory</option>
-                            <option value="Gombe">Gombe</option>
-                            <option value="Imo">Imo</option>
-                            <option value="Jigawa">Jigawa</option>
-                            <option value="Kaduna">Kaduna</option>
-                            <option value="Kano">Kano</option>
-                            <option value="Katsina">Katsina</option>
-                            <option value="Kebbi">Kebbi</option>
-                            <option value="Kogi">Kogi</option>
-                            <option value="Kwara">Kwara</option>
-                            <option value="Lagos">Lagos</option>
-                            <option value="Nasarawa">Nasarawa</option>
-                            <option value="Niger">Niger</option>
-                            <option value="Ogun">Ogun</option>
-                            <option value="Ondo">Ondo</option>
-                            <option value="Osun">Osun</option>
-                            <option value="Oyo">Oyo</option>
-                            <option value="Plateau">Plateau</option>
-                            <option value="Rivers">Rivers</option>
-                            <option value="Sokoto">Sokoto</option>
-                            <option value="Taraba">Taraba</option>
-                            <option value="Yobe">Yobe</option>
-                            <option value="Zamfara">Zamfara</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label for="lga" class="block mb-2 text-sm font-medium text-gray-700">LGA*</label>
-                        <input type="text" id="lga" name="lga" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-700">Email*</label>
-                        <input type="email" id="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="phone" class="block mb-2 text-sm font-medium text-gray-700">Phone Number*</label>
-                        <input type="tel" id="phone" name="phone" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Marital Status*</label>
-                        <div class="flex space-x-4">
-                            <div class="flex items-center">
-                                <input type="radio" id="single" name="marital_status" value="Single" class="mr-2" checked>
-                                <label for="single">Single</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="radio" id="married" name="marital_status" value="Married" class="mr-2">
-                                <label for="married">Married</label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Dynamic fields for spouse info (only shown when married is selected) -->
-                    <div id="spouse-fields" style="display: none;" class="col-span-2">
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Personal Information</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="spouse_name" class="block mb-2 text-sm font-medium text-gray-700">Spouse Name*</label>
-                                <input type="text" id="spouse_name" name="spouse_name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <label for="fullname" class="block text-sm font-medium text-gray-700 mb-1">Full Name (Surname First)</label>
+                                <input type="text" id="fullname" name="fullname" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter surname first, followed by other names" required>
                             </div>
                             <div>
-                                <label for="spouse_phone" class="block mb-2 text-sm font-medium text-gray-700">Spouse Phone Number*</label>
-                                <input type="tel" id="spouse_phone" name="spouse_phone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <label for="dob" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                                <input type="date" id="dob" name="dob" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div>
+                                <label for="state" class="block text-sm font-medium text-gray-700 mb-1">State of Origin</label>
+                                <select id="state" name="state" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                                    <option value="">Select State</option>
+                                    <option value="Abia">Abia</option>
+                                    <option value="Adamawa">Adamawa</option>
+                                    <option value="Akwa Ibom">Akwa Ibom</option>
+                                    <option value="Anambra">Anambra</option>
+                                    <option value="Bauchi">Bauchi</option>
+                                    <option value="Bayelsa">Bayelsa</option>
+                                    <option value="Benue">Benue</option>
+                                    <option value="Borno">Borno</option>
+                                    <option value="Cross River">Cross River</option>
+                                    <option value="Delta">Delta</option>
+                                    <option value="Ebonyi">Ebonyi</option>
+                                    <option value="Edo">Edo</option>
+                                    <option value="Ekiti">Ekiti</option>
+                                    <option value="Enugu">Enugu</option>
+                                    <option value="FCT">Federal Capital Territory</option>
+                                    <option value="Gombe">Gombe</option>
+                                    <option value="Imo">Imo</option>
+                                    <option value="Jigawa">Jigawa</option>
+                                    <option value="Kaduna">Kaduna</option>
+                                    <option value="Kano">Kano</option>
+                                    <option value="Katsina">Katsina</option>
+                                    <option value="Kebbi">Kebbi</option>
+                                    <option value="Kogi">Kogi</option>
+                                    <option value="Kwara">Kwara</option>
+                                    <option value="Lagos">Lagos</option>
+                                    <option value="Nasarawa">Nasarawa</option>
+                                    <option value="Niger">Niger</option>
+                                    <option value="Ogun">Ogun</option>
+                                    <option value="Ondo">Ondo</option>
+                                    <option value="Osun">Osun</option>
+                                    <option value="Oyo">Oyo</option>
+                                    <option value="Plateau">Plateau</option>
+                                    <option value="Rivers">Rivers</option>
+                                    <option value="Sokoto">Sokoto</option>
+                                    <option value="Taraba">Taraba</option>
+                                    <option value="Yobe">Yobe</option>
+                                    <option value="Zamfara">Zamfara</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="lga" class="block text-sm font-medium text-gray-700 mb-1">Local Government Area (LGA)</label>
+                                <input type="text" id="lga" name="lga" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Employment Information -->
-                    <div class="col-span-2 mt-4">
-                        <h4 class="text-lg font-medium mb-4 text-gray-700">Employment Information</h4>
-                    </div>
-                    
-                    <div>
-                        <label for="experience_years" class="block mb-2 text-sm font-medium text-gray-700">Years of Working Experience*</label>
-                        <input type="number" id="experience_years" name="experience_years" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="last_employment" class="block mb-2 text-sm font-medium text-gray-700">Last Place of Employment*</label>
-                        <input type="text" id="last_employment" name="last_employment" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="contact_person" class="block mb-2 text-sm font-medium text-gray-700">Contact Person (Last Employment)*</label>
-                        <input type="text" id="contact_person" name="contact_person" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Name and Phone Number">
-                    </div>
-                    
-                    <div>
-                        <label for="last_salary" class="block mb-2 text-sm font-medium text-gray-700">Last Salary Received*</label>
-                        <div class="relative">
-                            <span class="currency-symbol">₦</span>
-                            <input type="text" id="last_salary" name="last_salary" required class="w-full px-3 py-2 pl-8 border border-gray-300 rounded-md input-currency focus:outline-none focus:ring-2 focus:ring-green-500">
+
+                    <!-- Marital Status Section -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Marital Status</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Marital Status</label>
+                                <div class="flex items-center space-x-4">
+                                    <div>
+                                        <input type="radio" id="single" name="maritalStatus" value="Single" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300" checked>
+                                        <label for="single" class="ml-2 text-sm text-gray-700">Single</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="married" name="maritalStatus" value="Married" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300">
+                                        <label for="married" class="ml-2 text-sm text-gray-700">Married</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="spouseSection" class="hidden">
+                                <div class="grid grid-cols-1 gap-4">
+                                    <div>
+                                        <label for="spouseName" class="block text-sm font-medium text-gray-700 mb-1">Spouse Name</label>
+                                        <input type="text" id="spouseName" name="spouseName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                                    </div>
+                                    <div>
+                                        <label for="spousePhone" class="block text-sm font-medium text-gray-700 mb-1">Spouse Phone Number</label>
+                                        <input type="tel" id="spousePhone" name="spousePhone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div>
-                        <label for="reason_for_leaving" class="block mb-2 text-sm font-medium text-gray-700">Reason for Leaving*</label>
-                        <textarea id="reason_for_leaving" name="reason_for_leaving" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" rows="2"></textarea>
+
+                    <!-- Employment History -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Employment History</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="experience" class="block text-sm font-medium text-gray-700 mb-1">Years of Working Experience</label>
+                                <input type="number" id="experience" name="experience" min="0" step="0.5" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div>
+                                <label for="lastEmployer" class="block text-sm font-medium text-gray-700 mb-1">Last Place of Employment</label>
+                                <input type="text" id="lastEmployer" name="lastEmployer" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div>
+                                <label for="lastEmployerContact" class="block text-sm font-medium text-gray-700 mb-1">Contact Person at Last Employer</label>
+                                <input type="text" id="lastEmployerContact" name="lastEmployerContact" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Name and Phone number" required>
+                            </div>
+                            <div>
+                                <label for="lastSalary" class="block text-sm font-medium text-gray-700 mb-1">Last Salary Received (₦)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₦</span>
+                                    <input type="text" id="lastSalary" name="lastSalary" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter amount" required>
+                                </div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="reasonLeaving" class="block text-sm font-medium text-gray-700 mb-1">Reason for Leaving</label>
+                                <textarea id="reasonLeaving" name="reasonLeaving" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required></textarea>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <!-- Next of Kin Information -->
-                    <div class="col-span-2 mt-4">
-                        <h4 class="text-lg font-medium mb-4 text-gray-700">Next of Kin Information</h4>
+
+                    <!-- Next of Kin -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Next of Kin Information</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="nextOfKin" class="block text-sm font-medium text-gray-700 mb-1">Next of Kin Name</label>
+                                <input type="text" id="nextOfKin" name="nextOfKin" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div>
+                                <label for="nextOfKinPhone" class="block text-sm font-medium text-gray-700 mb-1">Next of Kin Phone Number</label>
+                                <input type="tel" id="nextOfKinPhone" name="nextOfKinPhone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="nextOfKinAddress" class="block text-sm font-medium text-gray-700 mb-1">Next of Kin Address</label>
+                                <textarea id="nextOfKinAddress" name="nextOfKinAddress" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required></textarea>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div>
-                        <label for="kin_name" class="block mb-2 text-sm font-medium text-gray-700">Next of Kin Name*</label>
-                        <input type="text" id="kin_name" name="kin_name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+
+                    <!-- Educational and Application Details -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Education & Application</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="qualification" class="block text-sm font-medium text-gray-700 mb-1">Highest Educational Qualification</label>
+                                <select id="qualification" name="qualification" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                                    <option value="">Select Qualification</option>
+                                    <option value="FSLC">First School Leaving Certificate</option>
+                                    <option value="SSCE">Senior Secondary Certificate Examination</option>
+                                    <option value="OND">Ordinary National Diploma</option>
+                                    <option value="NCE">National Certificate in Education</option>
+                                    <option value="HND">Higher National Diploma</option>
+                                    <option value="BSc">Bachelor's Degree</option>
+                                    <option value="MSc">Master's Degree</option>
+                                    <option value="PhD">Doctorate Degree</option>
+                                    <option value="Professional Certificate">Professional Certificate</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="positionApplied" class="block text-sm font-medium text-gray-700 mb-1">Position Applied For</label>
+                                <input type="text" id="positionApplied" name="positionApplied" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="residentialAddress" class="block text-sm font-medium text-gray-700 mb-1">Residential Address</label>
+                                <textarea id="residentialAddress" name="residentialAddress" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required></textarea>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div>
-                        <label for="kin_phone" class="block mb-2 text-sm font-medium text-gray-700">Next of Kin Phone Number*</label>
-                        <input type="tel" id="kin_phone" name="kin_phone" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+
+                    <div class="flex justify-between mt-8">
+                        <button type="button" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-300" disabled>Previous</button>
+                        <button type="button" id="nextBtn1" class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300">Save & Next</button>
                     </div>
-                    
-                    <div class="md:col-span-2">
-                        <label for="kin_address" class="block mb-2 text-sm font-medium text-gray-700">Next of Kin Address*</label>
-                        <textarea id="kin_address" name="kin_address" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" rows="2"></textarea>
-                    </div>
-                    
-                    <!-- Educational Information -->
-                    <div class="col-span-2 mt-4">
-                        <h4 class="text-lg font-medium mb-4 text-gray-700">Educational Qualification</h4>
-                    </div>
-                    
-                    <div>
-                        <label for="qualification" class="block mb-2 text-sm font-medium text-gray-700">Highest Qualification*</label>
-                        <select id="qualification" name="qualification" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option value="">Select Qualification</option>
-                            <option value="FSLC">First School Leaving Certificate</option>
-                            <option value="WAEC">WAEC/SSCE</option>
-                            <option value="OND">Ordinary National Diploma (OND)</option>
-                            <option value="HND">Higher National Diploma (HND)</option>
-                            <option value="BSc">Bachelor's Degree (BSc)</option>
-                            <option value="MSc">Master's Degree (MSc)</option>
-                            <option value="PhD">Doctorate (PhD)</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label for="position_applied" class="block mb-2 text-sm font-medium text-gray-700">Position Applied For*</label>
-                        <input type="text" id="position_applied" name="position_applied" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div class="md:col-span-2">
-                        <label for="residential_address" class="block mb-2 text-sm font-medium text-gray-700">Residential Address*</label>
-                        <textarea id="residential_address" name="residential_address" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" rows="2"></textarea>
-                    </div>
-                </div>
-                
-                <div class="flex justify-end mt-8">
-                    <button type="button" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-md transition duration-300 next-btn" data-next="pension-bank">Save & Next</button>
-                </div>
+                </form>
             </div>
-            
-            <!-- Pension & Bank Details Form -->
-            <div id="pension-bank" class="form-section">
-                <h3 class="text-xl font-semibold mb-6 text-green-600 border-b pb-2">Pension & Bank Details</h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Section 2: Pension and Bank Details -->
+            <div id="section2" class="form-section">
+                <form id="pensionBankForm">
                     <!-- Pension Information -->
-                    <div class="col-span-2">
-                        <h4 class="text-lg font-medium mb-4 text-gray-700">Pension Information</h4>
-                    </div>
-                    
-                    <div>
-                        <label for="pension_surname" class="block mb-2 text-sm font-medium text-gray-700">Surname*</label>
-                        <input type="text" id="pension_surname" name="pension_surname" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="pension_othernames" class="block mb-2 text-sm font-medium text-gray-700">Other Names*</label>
-                        <input type="text" id="pension_othernames" name="pension_othernames" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter names as in passport/ID">
-                    </div>
-                    
-                    <div>
-                        <label for="pension_number" class="block mb-2 text-sm font-medium text-gray-700">Pension Number (PIN)</label>
-                        <input type="text" id="pension_number" name="pension_number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="pension_administrator" class="block mb-2 text-sm font-medium text-gray-700">Pension Fund Administrator</label>
-                        <input type="text" id="pension_administrator" name="pension_administrator" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <!-- Bank Details -->
-                    <div class="col-span-2 mt-4">
-                        <h4 class="text-lg font-medium mb-4 text-gray-700">Bank Details</h4>
-                    </div>
-                    
-                    <div>
-                        <label for="bank_surname" class="block mb-2 text-sm font-medium text-gray-700">Surname*</label>
-                        <input type="text" id="bank_surname" name="bank_surname" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="bank_othernames" class="block mb-2 text-sm font-medium text-gray-700">Other Names*</label>
-                        <input type="text" id="bank_othernames" name="bank_othernames" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter names as in passport/ID">
-                    </div>
-                    
-                    <div>
-                        <label for="account_number" class="block mb-2 text-sm font-medium text-gray-700">Account Number*</label>
-                        <input type="text" id="account_number" name="account_number" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="bank_name" class="block mb-2 text-sm font-medium text-gray-700">Bank Name*</label>
-                        <input type="text" id="bank_name" name="bank_name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                </div>
-                
-                <div class="flex justify-between mt-8">
-                    <button type="button" class="text-gray-600 hover:text-gray-800 font-medium py-2 px-6 rounded-md transition duration-300 prev-btn" data-prev="applicant-data">
-                        <i class="fas fa-arrow-left mr-2"></i> Back
-                    </button>
-                    <button type="button" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-md transition duration-300 next-btn" data-next="id-card">Save & Next</button>
-                </div>
-            </div>
-            
-            <!-- ID Card & Documents Form -->
-            <div id="id-card" class="form-section">
-                <h3 class="text-xl font-semibold mb-6 text-green-600 border-b pb-2">ID Card Request & Documents</h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- ID Card Information -->
-                    <div class="col-span-2">
-                        <h4 class="text-lg font-medium mb-4 text-gray-700">ID Card Details</h4>
-                    </div>
-                    
-                    <div>
-                        <label for="id_surname" class="block mb-2 text-sm font-medium text-gray-700">Surname*</label>
-                        <input type="text" id="id_surname" name="id_surname" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="id_othernames" class="block mb-2 text-sm font-medium text-gray-700">Other Names*</label>
-                        <input type="text" id="id_othernames" name="id_othernames" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter names as in passport/ID">
-                    </div>
-                    
-                    <div>
-                        <label for="staff_id" class="block mb-2 text-sm font-medium text-gray-700">Staff ID No</label>
-                        <input type="text" id="staff_id" name="staff_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="id_company" class="block mb-2 text-sm font-medium text-gray-700">Name of Company*</label>
-                        <input type="text" id="id_company" name="id_company" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="issue_date" class="block mb-2 text-sm font-medium text-gray-700">Today's Date*</label>
-                        <input type="date" id="issue_date" name="issue_date" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <div>
-                        <label for="signature_name" class="block mb-2 text-sm font-medium text-gray-700">Signature Name*</label>
-                        <input type="text" id="signature_name" name="signature_name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                    </div>
-                    
-                    <!-- Document Upload Section -->
-                    <div class="col-span-2 mt-4">
-                        <h4 class="text-lg font-medium mb-4 text-gray-700">Document Upload</h4>
-                    </div>
-                    
-                    <!-- Passport Photo -->
-                    <div class="file-upload-container rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <i class="fas fa-id-card mr-2 text-lg text-green-600"></i>
-                            <label for="passport" class="text-sm font-medium text-gray-700">Passport Photograph (JPG, PNG - Max 2MB)*</label>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <input type="file" id="passport" name="passport" accept="image/*" required class="hidden">
-                            <div class="preview-container w-32 h-32 border border-gray-300 rounded-full mb-2 overflow-hidden">
-                                <img id="passport-preview" src="#" alt="Passport preview" class="w-full h-full object-cover" style="display: none;">
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Pension Information</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="penFullname" class="block text-sm font-medium text-gray-700 mb-1">Full Name (Surname First)</label>
+                                <input type="text" id="penFullname" name="penFullname" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter surname first, followed by other names">
                             </div>
-                            <button type="button" onclick="document.getElementById('passport').click()" class="bg-green-600 hover:bg-green-700 text-white text-sm py-1 px-3 rounded-md">Upload</button>
+                            <div>
+                                <label for="penNumber" class="block text-sm font-medium text-gray-700 mb-1">Pension Number (PIN)</label>
+                                <input type="text" id="penNumber" name="penNumber" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Optional (if available)">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="penAdministrator" class="block text-sm font-medium text-gray-700 mb-1">Pension Fund Administrator (PFA)</label>
+                                <input type="text" id="penAdministrator" name="penAdministrator" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Optional (if registered with a PFA)">
+                            </div>
                         </div>
                     </div>
-                    
-                    <!-- WAEC Result -->
-                    <div class="file-upload-container rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <i class="fas fa-certificate mr-2 text-lg text-green-600"></i>
-                            <label for="waec" class="text-sm font-medium text-gray-700">WAEC Result (PDF, JPG - Max 5MB)*</label>
+
+                    <!-- Bank Details -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Bank Details</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="bankFullname" class="block text-sm font-medium text-gray-700 mb-1">Full Name (Surname First)</label>
+                                <input type="text" id="bankFullname" name="bankFullname" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter surname first, followed by other names" required>
+                            </div>
+                            <div>
+                                <label for="accountNumber" class="block text-sm font-medium text-gray-700 mb-1">Account Number</label>
+                                <input type="text" id="accountNumber" name="accountNumber" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="bankName" class="block text-sm font-medium text-gray-700 mb-1">Bank Name</label>
+                                <select id="bankName" name="bankName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                                    <option value="">Select Bank</option>
+                                    <option value="Access Bank">Access Bank</option>
+                                    <option value="Citibank">Citibank</option>
+                                    <option value="Diamond Bank">Diamond Bank</option>
+                                    <option value="Ecobank">Ecobank</option>
+                                    <option value="Fidelity Bank">Fidelity Bank</option>
+                                    <option value="First Bank">First Bank</option>
+                                    <option value="First City Monument Bank">First City Monument Bank</option>
+                                    <option value="Guaranty Trust Bank">Guaranty Trust Bank</option>
+                                    <option value="Heritage Bank">Heritage Bank</option>
+                                    <option value="Keystone Bank">Keystone Bank</option>
+                                    <option value="Polaris Bank">Polaris Bank</option>
+                                    <option value="Providus Bank">Providus Bank</option>
+                                    <option value="Stanbic IBTC Bank">Stanbic IBTC Bank</option>
+                                    <option value="Standard Chartered Bank">Standard Chartered Bank</option>
+                                    <option value="Sterling Bank">Sterling Bank</option>
+                                    <option value="Suntrust Bank">Suntrust Bank</option>
+                                    <option value="Union Bank">Union Bank</option>
+                                    <option value="United Bank for Africa">United Bank for Africa</option>
+                                    <option value="Unity Bank">Unity Bank</option>
+                                    <option value="Wema Bank">Wema Bank</option>
+                                    <option value="Zenith Bank">Zenith Bank</option>
+                                </select>
+                            </div>
                         </div>
-                        <input type="file" id="waec" name="waec" accept=".pdf,.jpg,.jpeg,.png" required class="w-full">
-                        <div class="file-info mt-2 text-sm text-gray-600 hidden"></div>
                     </div>
-                    
-                    <!-- Birth Certificate -->
-                    <div class="file-upload-container rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <i class="fas fa-birthday-cake mr-2 text-lg text-green-600"></i>
-                            <label for="birth_certificate" class="text-sm font-medium text-gray-700">Birth Certificate (PDF, JPG - Max 5MB)*</label>
-                        </div>
-                        <input type="file" id="birth_certificate" name="birth_certificate" accept=".pdf,.jpg,.jpeg,.png" required class="w-full">
-                        <div class="file-info mt-2 text-sm text-gray-600 hidden"></div>
+
+                    <div class="flex justify-between mt-8">
+                        <button type="button" id="prevBtn2" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-300">Previous</button>
+                        <button type="button" id="nextBtn2" class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300">Save & Next</button>
                     </div>
-                    
-                    <!-- Affidavit of Change of Name -->
-                    <div class="file-upload-container rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <i class="fas fa-file-signature mr-2 text-lg text-green-600"></i>
-                            <label for="affidavit" class="text-sm font-medium text-gray-700">Affidavit of Change of Name (PDF, JPG - Max 5MB)</label>
+                </form>
+            </div>
+
+            <!-- Section 3: ID Card Request Form -->
+            <div id="section3" class="form-section">
+                <form id="idRequestForm">
+                    <!-- ID Card Information -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">ID Card Request Information</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="idFullname" class="block text-sm font-medium text-gray-700 mb-1">Full Name (Surname First)</label>
+                                <input type="text" id="idFullname" name="idFullname" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Enter surname first, followed by other names" required>
+                            </div>
+                            <div>
+                                <label for="staffId" class="block text-sm font-medium text-gray-700 mb-1">Staff ID Number</label>
+                                <input type="text" id="staffId" name="staffId" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Leave blank if not available">
+                            </div>
+                            <div>
+                                <label for="companyName" class="block text-sm font-medium text-gray-700 mb-1">Name of Company</label>
+                                <input type="text" id="companyName" name="companyName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div>
+                                <label for="todayDate" class="block text-sm font-medium text-gray-700 mb-1">Today's Date</label>
+                                <input type="date" id="todayDate" name="todayDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
+                            <div>
+                                <label for="signature" class="block text-sm font-medium text-gray-700 mb-1">Signature Name</label>
+                                <input type="text" id="signature" name="signature" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" required>
+                            </div>
                         </div>
-                        <input type="file" id="affidavit" name="affidavit" accept=".pdf,.jpg,.jpeg,.png" class="w-full">
-                        <div class="file-info mt-2 text-sm text-gray-600 hidden"></div>
                     </div>
-                    
-                    <!-- University Certificate -->
-                    <div class="file-upload-container rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <i class="fas fa-graduation-cap mr-2 text-lg text-green-600"></i>
-                            <label for="university_cert" class="text-sm font-medium text-gray-700">University Certificate (PDF, JPG - Max 5MB)*</label>
+
+                    <!-- Document Uploads -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Required Documents</h2>
+                        <p class="text-sm text-gray-600 mb-4">Please upload scanned copies of the following documents:</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <!-- Passport Photo -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-camera text-green-600 mr-2"></i>
+                                    <label class="text-sm font-medium text-gray-700">Passport Photograph</label>
+                                </div>
+                                <div class="upload-container" data-doc-type="passport">
+                                    <input type="file" id="passportUpload" class="custom-file-input" accept="image/*">
+                                    <label for="passportUpload" class="file-upload-label block w-full text-center py-2 px-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-green-50">
+                                        <i class="fas fa-cloud-upload-alt text-green-500 text-2xl mb-2"></i>
+                                        <p class="text-xs text-gray-500">Upload Passport</p>
+                                        <div class="preview-container mt-2 hidden">
+                                            <img id="passportPreview" class="h-20 mx-auto" src="#" alt="Passport preview">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- WAEC Result -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-file-certificate text-green-600 mr-2"></i>
+                                    <label class="text-sm font-medium text-gray-700">WAEC Result</label>
+                                </div>
+                                <div class="upload-container" data-doc-type="waec">
+                                    <input type="file" id="waecUpload" class="custom-file-input" accept="image/*,application/pdf">
+                                    <label for="waecUpload" class="file-upload-label block w-full text-center py-2 px-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-green-50">
+                                        <i class="fas fa-cloud-upload-alt text-green-500 text-2xl mb-2"></i>
+                                        <p class="text-xs text-gray-500">Upload WAEC</p>
+                                        <div class="preview-container mt-2 hidden">
+                                            <img id="waecPreview" class="h-20 mx-auto" src="#" alt="WAEC preview">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Birth Certificate -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-birthday-cake text-green-600 mr-2"></i>
+                                    <label class="text-sm font-medium text-gray-700">Birth Certificate</label>
+                                </div>
+                                <div class="upload-container" data-doc-type="birthCert">
+                                    <input type="file" id="birthCertUpload" class="custom-file-input" accept="image/*,application/pdf">
+                                    <label for="birthCertUpload" class="file-upload-label block w-full text-center py-2 px-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-green-50">
+                                        <i class="fas fa-cloud-upload-alt text-green-500 text-2xl mb-2"></i>
+                                        <p class="text-xs text-gray-500">Upload Certificate</p>
+                                        <div class="preview-container mt-2 hidden">
+                                            <img id="birthCertPreview" class="h-20 mx-auto" src="#" alt="Birth cert preview">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Affidavit -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-file-signature text-green-600 mr-2"></i>
+                                    <label class="text-sm font-medium text-gray-700">Affidavit of Name Change</label>
+                                </div>
+                                <div class="upload-container" data-doc-type="affidavit">
+                                    <input type="file" id="affidavitUpload" class="custom-file-input" accept="image/*,application/pdf">
+                                    <label for="affidavitUpload" class="file-upload-label block w-full text-center py-2 px-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-green-50">
+                                        <i class="fas fa-cloud-upload-alt text-green-500 text-2xl mb-2"></i>
+                                        <p class="text-xs text-gray-500">Upload Affidavit</p>
+                                        <div class="preview-container mt-2 hidden">
+                                            <img id="affidavitPreview" class="h-20 mx-auto" src="#" alt="Affidavit preview">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- University Certificate -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-graduation-cap text-green-600 mr-2"></i>
+                                    <label class="text-sm font-medium text-gray-700">University Certificate</label>
+                                </div>
+                                <div class="upload-container" data-doc-type="uniCert">
+                                    <input type="file" id="uniCertUpload" class="custom-file-input" accept="image/*,application/pdf">
+                                    <label for="uniCertUpload" class="file-upload-label block w-full text-center py-2 px-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-green-50">
+                                        <i class="fas fa-cloud-upload-alt text-green-500 text-2xl mb-2"></i>
+                                        <p class="text-xs text-gray-500">Upload Certificate</p>
+                                        <div class="preview-container mt-2 hidden">
+                                            <img id="uniCertPreview" class="h-20 mx-auto" src="#" alt="University cert preview">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- CV -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-file-alt text-green-600 mr-2"></i>
+                                    <label class="text-sm font-medium text-gray-700">Curriculum Vitae (CV)</label>
+                                </div>
+                                <div class="upload-container" data-doc-type="cv">
+                                    <input type="file" id="cvUpload" class="custom-file-input" accept="image/*,application/pdf,.doc,.docx">
+                                    <label for="cvUpload" class="file-upload-label block w-full text-center py-2 px-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-green-50">
+                                        <i class="fas fa-cloud-upload-alt text-green-500 text-2xl mb-2"></i>
+                                        <p class="text-xs text-gray-500">Upload CV</p>
+                                        <div class="preview-container mt-2 hidden">
+                                            <img id="cvPreview" class="h-20 mx-auto" src="#" alt="CV preview">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- NIN -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-id-card text-green-600 mr-2"></i>
+                                    <label class="text-sm font-medium text-gray-700">National ID (NIN)</label>
+                                </div>
+                                <div class="upload-container" data-doc-type="nin">
+                                    <input type="file" id="ninUpload" class="custom-file-input" accept="image/*,application/pdf">
+                                    <label for="ninUpload" class="file-upload-label block w-full text-center py-2 px-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-green-50">
+                                        <i class="fas fa-cloud-upload-alt text-green-500 text-2xl mb-2"></i>
+                                        <p class="text-xs text-gray-500">Upload NIN</p>
+                                        <div class="preview-container mt-2 hidden">
+                                            <img id="ninPreview" class="h-20 mx-auto" src="#" alt="NIN preview">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Others -->
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-folder-open text-green-600 mr-2"></i>
+                                    <label class="text-sm font-medium text-gray-700">Other Documents</label>
+                                </div>
+                                <div class="upload-container" data-doc-type="others">
+                                    <input type="file" id="otherUpload" class="custom-file-input" accept="image/*,application/pdf,.doc,.docx">
+                                    <label for="otherUpload" class="file-upload-label block w-full text-center py-2 px-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-green-50">
+                                        <i class="fas fa-cloud-upload-alt text-green-500 text-2xl mb-2"></i>
+                                        <p class="text-xs text-gray-500">Upload Others</p>
+                                        <div class="preview-container mt-2 hidden">
+                                            <img id="otherPreview" class="h-20 mx-auto" src="#" alt="Other doc preview">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <input type="file" id="university_cert" name="university_cert" accept=".pdf,.jpg,.jpeg,.png" required class="w-full">
-                        <div class="file-info mt-2 text-sm text-gray-600 hidden"></div>
                     </div>
-                    
-                    <!-- CV -->
-                    <div class="file-upload-container rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <i class="fas fa-file-alt mr-2 text-lg text-green-600"></i>
-                            <label for="cv" class="text-sm font-medium text-gray-700">CV/Resume (PDF, DOCX - Max 5MB)*</label>
-                        </div>
-                        <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required class="w-full">
-                        <div class="file-info mt-2 text-sm text-gray-600 hidden"></div>
+
+                    <div class="flex justify-between mt-8">
+                        <button type="button" id="prevBtn3" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-300">Previous</button>
+                        <button type="button" id="submitBtn" class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300">Submit Application</button>
                     </div>
-                    
-                    <!-- NIN -->
-                    <div class="file-upload-container rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <i class="fas fa-id-badge mr-2 text-lg text-green-600"></i>
-                            <label for="nin" class="text-sm font-medium text-gray-700">NIN (PDF, JPG - Max 5MB)*</label>
-                        </div>
-                        <input type="file" id="nin" name="nin" accept=".pdf,.jpg,.jpeg,.png" required class="w-full">
-                        <div class="file-info mt-2 text-sm text-gray-600 hidden"></div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Camera Modal -->
+    <div id="cameraModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Capture Photo</h3>
+                    <div class="w-full bg-black">
+                        <video id="video" width="100%" height="auto" autoplay></video>
+                        <canvas id="canvas" class="hidden"></canvas>
                     </div>
-                    
-                    <!-- Other Documents -->
-                    <div class="file-upload-container rounded-lg p-4 col-span-2">
-                        <div class="flex items-center mb-2">
-                            <i class="fas fa-folder-open mr-2 text-lg text-green-600"></i>
-                            <label for="other_docs" class="text-sm font-medium text-gray-700">Other Relevant Documents (PDF, JPG, DOCX - Max 10MB in total)</label>
-                        </div>
-                        <input type="file" id="other_docs" name="other_docs[]" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" class="w-full">
-                        <div class="file-info mt-2 text-sm text-gray-600 hidden"></div>
+                    <div class="mt-4 flex justify-center">
+                        <button id="captureBtn" class="mr-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i class="fas fa-camera mr-2"></i> Capture
+                        </button>
+                        <button id="retakeBtn" class="hidden inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            <i class="fas fa-redo mr-2"></i> Retake
+                        </button>
                     </div>
                 </div>
-                
-                <div class="flex justify-between mt-8">
-                    <button type="button" class="text-gray-600 hover:text-gray-800 font-medium py-2 px-6 rounded-md transition duration-300 prev-btn" data-prev="pension-bank">
-                        <i class="fas fa-arrow-left mr-2"></i> Back
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="usePhotoBtn" class="hidden w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Use Photo
                     </button>
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-md transition duration-300">Submit</button>
+                    <button type="button" id="closeCameraBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancel
+                    </button>
                 </div>
             </div>
-        </form>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Upload Options</h3>
+                    <div class="flex flex-col space-y-4">
+                        <button id="cameraOption" class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i class="fas fa-camera mr-3"></i> Take Photo with Camera
+                        </button>
+                        <button id="galleryOption" class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i class="fas fa-image mr-3"></i> Choose from Gallery
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="closeUploadBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        // Form navigation
         document.addEventListener('DOMContentLoaded', function() {
-            // Form navigation
-            const navItems = document.querySelectorAll('.nav-item');
-            const formSections = document.querySelectorAll('.form-section');
+            // Get all sections
+            const sections = document.querySelectorAll('.form-section');
+            const progressSteps = document.querySelectorAll('.progress-step');
+            let currentSection = 0;
             
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const target = this.getAttribute('data-target');
-                    
-                    // Update active nav item
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show corresponding form section
-                    formSections.forEach(section => {
-                        section.classList.remove('active');
-                        if (section.id === target) {
-                            section.classList.add('active');
-                        }
-                    });
-                });
+            // Show first section by default
+            showSection(currentSection);
+            
+            // Next button click handlers
+            document.getElementById('nextBtn1').addEventListener('click', function() {
+                if (validateSection1()) {
+                    saveSection1();
+                    showSection(1);
+                }
             });
             
-            // Next/Previous buttons
-            const nextBtns = document.querySelectorAll('.next-btn');
-            const prevBtns = document.querySelectorAll('.prev-btn');
-            
-            nextBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const target = this.getAttribute('data-next');
-                    
-                    // Find corresponding nav item and trigger click
-                    document.querySelector(`.nav-item[data-target="${target}"]`).click();
-                });
+            document.getElementById('nextBtn2').addEventListener('click', function() {
+                if (validateSection2()) {
+                    saveSection2();
+                    showSection(2);
+                }
             });
             
-            prevBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const target = this.getAttribute('data-prev');
-                    
-                    // Find corresponding nav item and trigger click
-                    document.querySelector(`.nav-item[data-target="${target}"]`).click();
-                });
+            // Previous button click handlers
+            document.getElementById('prevBtn2').addEventListener('click', function() {
+                showSection(0);
             });
             
-            // Show/hide spouse fields based on marital status
-            const maritalStatus = document.querySelectorAll('input[name="marital_status"]');
-            const spouseFields = document.getElementById('spouse-fields');
+            document.getElementById('prevBtn3').addEventListener('click', function() {
+                showSection(1);
+            });
             
-            maritalStatus.forEach(radio => {
+            // Submit button click handler
+            document.getElementById('submitBtn').addEventListener('click', function() {
+                if (validateSection3()) {
+                    saveSection3();
+                    submitAllData();
+                }
+            });
+            
+            // Marital status toggle
+            document.querySelectorAll('input[name="maritalStatus"]').forEach(function(radio) {
                 radio.addEventListener('change', function() {
+                    const spouseSection = document.getElementById('spouseSection');
                     if (this.value === 'Married') {
-                        spouseFields.style.display = 'block';
-                        document.getElementById('spouse_name').setAttribute('required', '');
-                        document.getElementById('spouse_phone').setAttribute('required', '');
+                        spouseSection.classList.remove('hidden');
+                        document.getElementById('spouseName').required = true;
+                        document.getElementById('spousePhone').required = true;
                     } else {
-                        spouseFields.style.display = 'none';
-                        document.getElementById('spouse_name').removeAttribute('required');
-                        document.getElementById('spouse_phone').removeAttribute('required');
+                        spouseSection.classList.add('hidden');
+                        document.getElementById('spouseName').required = false;
+                        document.getElementById('spousePhone').required = false;
                     }
                 });
             });
             
-            // Format currency input
-            const currencyInput = document.getElementById('last_salary');
-            currencyInput.addEventListener('input', function(e) {
+            // Currency formatting for salary
+            document.getElementById('lastSalary').addEventListener('input', function(e) {
                 // Remove all non-digit characters
-                let num = this.value.replace(/\D/g, '');
-                
+                let value = this.value.replace(/\D/g, '');
                 // Format with commas
-                num = new Intl.NumberFormat().format(num);
-                
-                // Update the input value
-                this.value = num;
+                if (value.length > 0) {
+                    value = parseInt(value).toLocaleString('en-US');
+                }
+                this.value = value;
             });
             
-            // Preview passport photo
-            const passportInput = document.getElementById('passport');
-            passportInput.addEventListener('change', function(e) {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const preview = document.getElementById('passport-preview');
-                        preview.src = event.target.result;
-                        preview.style.display = 'block';
-                    }
-                    reader.readAsDataURL(file);
-                }
-            });
+            // File upload handlers
+            setupFileUploads();
             
-            // Handle other file uploads
-            const fileInputs = document.querySelectorAll('input[type="file"]:not(#passport)');
-            fileInputs.forEach(input => {
-                input.addEventListener('change', function(e) {
-                    const files = this.files;
-                    const fileInfo = this.nextElementSibling;
-                    
-                    if (files.length > 0) {
-                        let fileNames = '';
-                        for (let i = 0; i < files.length; i++) {
-                            fileNames += files[i].name + '<br>';
-                        }
-                        fileInfo.innerHTML = `<strong>Selected:</strong><br>${fileNames}`;
-                        fileInfo.classList.remove('hidden');
-                    } else {
-                        fileInfo.innerHTML = '';
-                        fileInfo.classList.add('hidden');
-                    }
-                });
-            });
-            
-            // Handle form submission
-            const form = document.getElementById('employeeOnboardingForm');
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Validate all required fields
-                const requiredFields = document.querySelectorAll('[required]');
-                let isValid = true;
-                
-                requiredFields.forEach(field => {
-                    if (!field.value) {
-                        field.classList.add('border-red-500');
-                        isValid = false;
-                    }
-                });
-                
-                if (!isValid) {
-                    alert('Please fill all required fields');
-                    return;
-                }
-                
-                // Form data collection
-                const formData = new FormData(form);
-                
-                // Here you would typically send the form data to your server
-                // In a real implementation, you would use fetch or AJAX
-                
-                // TODO: Connect to MySQL database
-                // This is where you would send the form data to your backend
-                // Example using fetch:
-                /*
-                fetch('your-backend-endpoint', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle success
-                    console.log('Success:', data);
-                    
-                    // TODO: Generate PDF and send email
-                    // This would be done on the server side
-                    
-                    alert('Form submitted successfully!');
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('Error submitting form. Please try again.');
-                });
-                */
-                
-                // For demo purposes, we'll just log the data
-                for (var pair of formData.entries()) {
-                    console.log(pair[0] + ': ' + pair[1]);
-                }
-                
-                // TODO: Upload files to Google Drive
-                // This requires server-side implementation or Google Drive API
-                // Pseudocode:
-                /*
-                1. Create a folder named with the user's name (from formData)
-                2. Upload all files to this folder
-                3. You would need to authenticate with Google Drive API
-                4. The server would need to handle the upload
-                */
-               
-                alert('Form submitted successfully! (Demo)');
-                
-                // TODO: Generate PDF and send email
-                // This would be done on the server side
-                // Pseudocode:
-                /*
-                1. Use a PDF generation library on the server
-                2. Include all form data in the PDF
-                3. Send the PDF as attachment to specified email
-                4. Email configuration would need to be set on the server
-                */
-                
-                // Reset form after submission (optional)
-                // form.reset();
-            });
+            // Initialize camera modal
+            setupCameraModal();
         });
-
-        // TODO: Implement Google Drive upload functionality
-        // This would require server-side code to authenticate and upload files
-        // The following is just a placeholder for where the code would go
-
-        /**
-         * Function to upload files to Google Drive
-         * @param {FileList} files - The files to upload
-         * @param {string} folderName - The name of the folder to create in Drive
-         */
-        /*
-        function uploadToGoogleDrive(files, folderName) {
-            // Google Drive API credentials would go here
-            // Example:
-            const CLIENT_ID = 'YOUR_CLIENT_ID';
-            const API_KEY = 'YOUR_API_KEY';
-            const DRIVE_EMAIL = 'YOUR_DRIVE_EMAIL'; // The email of the Google Drive account
+        
+        function showSection(sectionIndex) {
+            // Hide all sections
+            document.querySelectorAll('.form-section').forEach(function(section, index) {
+                section.classList.remove('active');
+                if (index < sectionIndex) {
+                    section.classList.add('completed');
+                }
+            });
             
-            // OAuth2 authentication and file upload code would go here
-            // This is complex and requires server-side implementation for security
+            // Update progress steps
+            document.querySelectorAll('.progress-step').forEach(function(step, index) {
+                if (index <= sectionIndex) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+            
+            // Show current section
+            document.querySelectorAll('.form-section')[sectionIndex].classList.add('active');
+            
+            // Update form title
+            const titles = ['Applicant Data Form', 'Pension & Bank Details', 'ID Card Request Form'];
+            document.getElementById('form-title').textContent = titles[sectionIndex];
+        }
+        
+        function validateSection1() {
+            const form = document.getElementById('applicantForm');
+            return form.checkValidity();
+        }
+        
+        function validateSection2() {
+            const form = document.getElementById('pensionBankForm');
+            return form.checkValidity();
+        }
+        
+        function validateSection3() {
+            const form = document.getElementById('idRequestForm');
+            return form.checkValidity();
+        }
+        
+        function saveSection1() {
+            // Here you would save the form data to a variable or object
+            console.log('Section 1 data saved');
+        }
+        
+        function saveSection2() {
+            // Here you would save the form data to a variable or object
+            console.log('Section 2 data saved');
+        }
+        
+        function saveSection3() {
+            // Here you would save the form data to a variable or object
+            console.log('Section 3 data saved');
+        }
+        
+        function submitAllData() {
+            // Create a FormData object containing all form data
+            const formData = new FormData();
+            
+            // Add data from all forms
+            addFormDataToRequest('applicantForm', formData);
+            addFormDataToRequest('pensionBankForm', formData);
+            addFormDataToRequest('idRequestForm', formData);
+            
+            // TODO: Add uploaded files to formData
+            
+            /* 
+            // This is where you would connect to MySQL database
+            // You would need PHP or Node.js backend to handle this
+            // Example using fetch API:
+            
+            fetch('submit.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Application submitted successfully!');
+                    // Redirect or show success message
+                } else {
+                    alert('Error submitting application: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the form.');
+            });
+            */
+            
+            // Temporarily just showing alert
+            alert('Application submitted successfully! (This would actually save to database in production)');
+            
+            // TODO: Generate PDF and send email
+            /*
+            // This would require a server-side solution like Node.js with PDFKit or PHP with TCPDF
+            // Email would be sent using something like PHPMailer or Nodemailer
+            */
+        }
+        
+        function addFormDataToRequest(formId, formData) {
+            const form = document.getElementById(formId);
+            const inputs = form.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                if (input.type === 'file') {
+                    // Files are handled separately
+                } else if (input.type !== 'radio' && input.type !== 'checkbox') {
+                    formData.append(input.name, input.value);
+                } else if (input.checked) {
+                    formData.append(input.name, input.value);
+                }
+            });
+        }
+        
+        function setupFileUploads() {
+            // Handle file upload buttons
+            document.querySelectorAll('.custom-file-input').forEach(input => {
+                input.addEventListener('change', function(e) {
+                    const container = this.closest('.upload-container');
+                    const docType = container.getAttribute('data-doc-type');
+                    const label = container.querySelector('.file-upload-label');
+                    const previewContainer = container.querySelector('.preview-container');
+                    const previewImg = container.querySelector('.preview-container img');
+                    
+                    if (this.files && this.files[0]) {
+                        const file = this.files[0];
+                        
+                        if (file.type.match('image.*')) {
+                            const reader = new FileReader();
+                            
+                            reader.onload = function(e) {
+                                previewImg.src = e.target.result;
+                                previewContainer.classList.remove('hidden');
+                                label.querySelector('p').textContent = file.name;
+                            }
+                            
+                            reader.readAsDataURL(file);
+                        } else {
+                            // For PDF and other non-image files
+                            previewContainer.classList.add('hidden');
+                            label.querySelector('p').textContent = file.name;
+                        }
+                    }
+                });
+            });
+            
+            // Open upload modal when any upload area is clicked
+            document.querySelectorAll('.file-upload-label').forEach(label => {
+                label.addEventListener('click', function(e) {
+                    // Don't trigger if clicking on the preview image
+                    if (e.target.tagName !== 'IMG') {
+                        e.preventDefault();
+                        document.getElementById('uploadModal').classList.remove('hidden');
+                        
+                        // Store which document type is being uploaded
+                        const container = this.closest('.upload-container');
+                        const docType = container.getAttribute('data-doc-type');
+                        document.getElementById('uploadModal').setAttribute('data-current-doc', docType);
+                    }
+                });
+            });
+            
+            // Camera option in modal
+            document.getElementById('cameraOption').addEventListener('click', function() {
+                document.getElementById('uploadModal').classList.add('hidden');
+                document.getElementById('cameraModal').classList.remove('hidden');
+                startCamera();
+            });
+            
+            // Gallery option in modal
+            document.getElementById('galleryOption').addEventListener('click', function() {
+                const docType = document.getElementById('uploadModal').getAttribute('data-current-doc');
+                document.getElementById('uploadModal').classList.add('hidden');
+                document.getElementById(`${docType}Upload`).click();
+            });
+            
+            // Close upload modal
+            document.getElementById('closeUploadBtn').addEventListener('click', function() {
+                document.getElementById('uploadModal').classList.add('hidden');
+            });
+        }
+        
+        function setupCameraModal() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const captureBtn = document.getElementById('captureBtn');
+            const retakeBtn = document.getElementById('retakeBtn');
+            const usePhotoBtn = document.getElementById('usePhotoBtn');
+            const closeCameraBtn = document.getElementById('closeCameraBtn');
+            
+            let stream = null;
+            
+            function startCamera() {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(function(cameraStream) {
+                            stream = cameraStream;
+                            video.srcObject = stream;
+                            video.style.display = 'block';
+                            canvas.style.display = 'none';
+                        })
+                        .catch(function(error) {
+                            console.error('Camera error:', error);
+                            alert('Could not access the camera. Please check permissions.');
+                        });
+                } else {
+                    alert('Camera access not supported in this browser.');
+                }
+            }
+            
+            function stopCamera() {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    stream = null;
+                }
+            }
+            
+            captureBtn.addEventListener('click', function() {
+                // Pause the video
+                video.pause();
+                
+                // Draw video frame to canvas
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                // Show canvas and hide video
+                video.style.display = 'none';
+                canvas.style.display = 'block';
+                
+                // Show retake and use photo buttons
+                captureBtn.classList.add('hidden');
+                retakeBtn.classList.remove('hidden');
+                usePhotoBtn.classList.remove('hidden');
+                
+                // Stop camera
+                stopCamera();
+            });
+            
+            retakeBtn.addEventListener('click', function() {
+                // Show video and hide canvas
+                video.style.display = 'block';
+                canvas.style.display = 'none';
+                
+                // Hide retake and use photo buttons
+                captureBtn.classList.remove('hidden');
+                retakeBtn.classList.add('hidden');
+                usePhotoBtn.classList.add('hidden');
+                
+                // Restart camera
+                startCamera();
+            });
+            
+            usePhotoBtn.addEventListener('click', function() {
+                // Get the document type being uploaded
+                const docType = document.getElementById('uploadModal').getAttribute('data-current-doc');
+                
+                // Convert canvas to blob
+                canvas.toBlob(function(blob) {
+                    // Create a file from the blob
+                    const file = new File([blob], `${docType}-photo.jpg`, { type: 'image/jpeg' });
+                    
+                    // Create a new FileList with the captured photo
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    
+                    // Set the input's files to the new FileList
+                    const input = document.getElementById(`${docType}Upload`);
+                    input.files = dataTransfer.files;
+                    
+                    // Trigger change event to update UI
+                    const event = new Event('change');
+                    input.dispatchEvent(event);
+                    
+                    // Close modal
+                    document.getElementById('cameraModal').classList.add('hidden');
+                }, 'image/jpeg', 0.9);
+            });
+            
+            closeCameraBtn.addEventListener('click', function() {
+                stopCamera();
+                document.getElementById('cameraModal').classList.add('hidden');
+            });
+        }
+        
+        /* 
+        // Google Drive upload function
+        // This would require the Google Drive API and server-side implementation
+        // Here's a conceptual example of what the function might look like
+        
+        function uploadToGoogleDrive(file, folderName) {
+            // You would need to:
+            // 1. Authenticate with Google Drive API
+            // 2. Create a folder with the employee's name
+            // 3. Upload the file to that folder
+            // 4. Return the file ID or URL
+            
+            // Example credentials (you would replace these with actual credentials)
+            const clientId = 'YOUR_GOOGLE_CLIENT_ID';
+            const apiKey = 'YOUR_GOOGLE_API_KEY';
+            const scope = 'https://www.googleapis.com/auth/drive.file';
+            
+            // This would be implemented on your server for security
+            // Client-side JavaScript should not handle credentials directly
         }
         */
     </script>
