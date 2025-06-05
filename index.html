@@ -729,22 +729,6 @@
                     document.getElementById('spousePhone').removeAttribute('required');
                 }
             });
-            
-            // Function to save form data to local storage
-            function saveFormData(formId) {
-                const form = document.getElementById(formId);
-                const inputs = form.querySelectorAll('input, select, textarea');
-                
-                const formData = {};
-                inputs.forEach(input => {
-                    if (input.type === 'file') return; // Skip file inputs
-                    
-                    if (input.type === 'checkbox' || input.type === 'radio') {
-                        formData[input.id] = input.checked;
-                    } else {
-                        formData[input.id] = input.value;
-                    }
-                });
                 
                 // Special handling for signature canvas
                 if (formId === 'idCardForm') {
@@ -753,27 +737,6 @@
                 
                 localStorage.setItem(formId, JSON.stringify(formData));
             }
-            
-            // Function to load form data from local storage
-            function loadFormData(formId) {
-                const savedData = localStorage.getItem(formId);
-                if (!savedData) return;
-                
-                const formData = JSON.parse(savedData);
-                const form = document.getElementById(formId);
-                const inputs = form.querySelectorAll('input, select, textarea');
-                
-                inputs.forEach(input => {
-                    if (input.type === 'file') return; // Skip file inputs
-                    
-                    if (input.id in formData) {
-                        if (input.type === 'checkbox' || input.type === 'radio') {
-                            input.checked = formData[input.id];
-                        } else {
-                            input.value = formData[input.id];
-                        }
-                    }
-                });
                 
                 // Special handling for marital status to show/hide spouse fields
                 if (formId === 'applicantDataForm' && formData.maritalStatus === 'Married') {
